@@ -1,0 +1,34 @@
+{
+    "name": "twoquakers/peanut-gutenberg",
+    "description": "Peanut Framework Adapted for Wordpress 6",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Terry SoRelle",
+            "email": "twoquakedev@outlook.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "*",
+        "smalot/pdfparser": "*",
+        "ext-pdo": "*",
+        "phpmailer/phpmailer": "*",
+        "ext-json": "*",
+        "soundasleep/html2text": "*",
+        "ext-openssl": "*",
+        "mailgun/mailgun-php": "*",
+        "symfony/http-client": "*",
+        "nyholm/psr7": "*",
+      "ext-calendar": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "^9.3"
+    }
+}

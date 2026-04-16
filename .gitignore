@@ -1,0 +1,17 @@
+/vendor/
+/node_modules/
+/temp/
+/novcs/
+/build/
+/webroot/wp-includes/*/**
+/web.root/tq-peanut/application/assets/js/libraries/
+/images/
+/maildrop/
+/web.root/tq-peanut/application/config/mailgun.ini
+/html/prototype/
+/config/
+*.js
+!/web.root/tq-peanut/pnut/core/peanut-core.min.js
+!/web.root/tq-peanut/pnut/core/peanut-loader.min.js
+!/web.root/wp-plugins/peanut/*/**
+*.js.map
