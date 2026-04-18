@@ -1,3 +1,4 @@
+**/node_modules/
 /vendor/
 /node_modules/
 /temp/
@@ -14,4 +15,6 @@
 !/web.root/tq-peanut/pnut/core/peanut-core.min.js
 !/web.root/tq-peanut/pnut/core/peanut-loader.min.js
 !/web.root/wp-plugins/peanut/*/**
+/web.root/wp-content/*/**
+!/web.root/wp-content/plugins/peanut/*/**
 *.js.map

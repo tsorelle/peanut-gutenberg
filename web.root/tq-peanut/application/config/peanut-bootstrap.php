@@ -240,15 +240,11 @@ class Bootstrap
             $optimize = true;
         }
 
-        /* not supported in this version
-            if ($optimize) {
-                    $result->dependencies = $peanutPath . '/dist/peanut.min.js';
-        }*/
-
         //  knockout always first
         // $result->dependencies = ["$corePath/lib/knockout/knockout-3.5.1.js"];
         $result->dependencies = ["https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js"];
-        $dependencies = empty($settings['dependencies']) ? ['ajax']
+        $dependencies = empty($settings['dependencies']) ?
+            [] // ['ajax']
             : explode(',', $settings["dependencies"]);
         foreach ($dependencies as $dependency) {
             switch ($dependency) {
