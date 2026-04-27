@@ -11,6 +11,9 @@ namespace Tops\mail;
 
 use Tops\sys\TConfiguration;
 
+/**
+ * NOT USED?
+ */
 class TMailConfiguration
 {
     public static function GetSettings()

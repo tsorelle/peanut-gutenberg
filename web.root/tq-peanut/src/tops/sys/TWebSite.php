@@ -89,6 +89,22 @@ class TWebSite
         $baseUrl = $value;
     }
 
+    public static function GetCmsType() {
+        if (defined('C5_EXECUTE')) {
+            return 'ConcreteCMS';
+        }
+        if (defined('ABSPATH')) {
+            // WordPress
+            // return  (function_exists('register_block_type') ? 'Gutenberg' : 'WordPress');
+            return 'WordPress';
+        }
+        if (defined('NUTSHELL')) {
+            return 'Nutshell';
+        }
+        // not supported: Drupal, Joomla, others
+        // not in supported CMS
+        return 'unknown';
+    }
     /**
      * Get subdomain part of URL
      */

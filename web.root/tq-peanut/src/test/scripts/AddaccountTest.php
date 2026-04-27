@@ -16,8 +16,6 @@ use Tops\concrete5\TConcrete5UserFactory;
 use Tops\services\TMessageContainer;
 use Tops\sys\TUser;
 
-;
-
 class AddaccountTest extends TestScript
 {
 

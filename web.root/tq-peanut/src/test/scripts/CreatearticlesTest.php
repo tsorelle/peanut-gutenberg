@@ -7,10 +7,10 @@ use Peanut\QnutMigration\db\model\repository\DrupalArticlesRepository;
 use Peanut\QnutMigration\DrupalContentConverter;
 use Soundasleep\Html2Text;
 
-include_once DIR_BASE.'/packages/knockout_view/pnut/packages/qnut-migration/src/db/model/entity/DrupalArticle.php';
-include_once DIR_BASE.'/packages/knockout_view/pnut/packages/qnut-migration/src/db/model/repository/DrupalArticlesRepository.php';
-include_once DIR_BASE.'/packages/knockout_view/pnut/packages/qnut-migration/src/DrupalContentConverter.php';
-/*DIR_BASE
+include_once DIR_ROOT.'/packages/knockout_view/pnut/packages/qnut-migration/src/db/model/entity/DrupalArticle.php';
+include_once DIR_ROOT.'/packages/knockout_view/pnut/packages/qnut-migration/src/db/model/repository/DrupalArticlesRepository.php';
+include_once DIR_ROOT.'/packages/knockout_view/pnut/packages/qnut-migration/src/DrupalContentConverter.php';
+/*DIR_ROOT
 'D:\dev\scym2021\web.root\packages\knockout_view\
 
 pnut\packages\qnut-migration\src\db\model\repository\DrupalArticlesRepository.php'*/

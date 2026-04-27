@@ -12,6 +12,11 @@ use Tops\sys\TConfiguration;
 use Tops\sys\TIniSettings;
 use Tops\sys\TPath;
 
+/**
+ * Class PeanutSettings
+ * @package Peanut\sys
+ * DEPRECATED and not supported
+ */
 class PeanutSettings
 {
     /**
@@ -19,37 +24,37 @@ class PeanutSettings
      */
 
     public static function GetModulePath (){
-        $modulePath = TConfiguration::getValue('modulePath','peanut','modules');
-        return $modulePath;
+        return substr(URL_PEANUT_ROOT,1); // strip leading slash
     }
 
     public static function FromSrcPath($srcFile) {
-        $modulePath = self::GetModulePath();
-        $modulePath = TPath::fromFileRoot($modulePath);
-        $srcPath = TPath::combine($modulePath,'src');
-        return TPath::combine($srcPath,$srcFile);
+        return TPath::normalize(DIR_PEANUT_ROOT.'/'.$srcFile);
         // return realpath($file);
     }
 
     public static function FromPeanutRoot($path) {
-        $root = TPath::fromFileRoot(self::GetPeanutRoot());
-        return TPath::combine($root,$path);
+        // $root = TPath::fromFileRoot(self::GetPeanutRoot());
+        return TPath::combine(DIR_PEANUT_ROOT,$path);
     }
 
     public static function GetPeanutRoot (){
-        $modulePath = self::GetModulePath();
+/*        $modulePath = self::GetModulePath();
         $peanutRoot = TConfiguration::getValue('peanutRootPath','peanut',"$modulePath/pnut");
-        return $peanutRoot;
+        return $peanutRoot;*/
+        return URL_PEANUT_ROOT."/pnut";
     }
     public static function GetMvvmPath   (){
-        $mvvmPath = TConfiguration::getValue('mvvmPath','peanut','application/peanut');
+ /*       $mvvmPath = TConfiguration::getValue('mvvmPath','peanut','application/peanut');
         return $mvvmPath;
+ */
+        return substr(URL_PEANUT_ROOT,1);
     }
     public static function GetCorePath   (){
-        $peanutRoot = self::GetPeanutRoot();
+/*        $peanutRoot = self::GetPeanutRoot();
         // $corePath   =   (empty($settings['corePath']) ? $peanutRoot . '/core' : $settings['corePath']);
         $corePath   =   TConfiguration::getValue('corePath',$peanutRoot . '/core');
-        return $corePath;
+        return $corePath;*/
+        return substr(URL_PEANUT_ROOT.'pnut/core',1);
     }
     public static function GetPackagePath(){
         $peanutRoot = self::GetPeanutRoot();

@@ -26,10 +26,11 @@ abstract class PeanutInstaller
      */
     public static function GetInstaller()
     {
-        if (TObjectContainer::HasDefinition('peanut.installer')) {
+        throw new \Exception('Peanut install system is deprecated. And not supported.');
+/*        if (TObjectContainer::HasDefinition('peanut.installer')) {
             return TObjectContainer::Get('peanut.installer');
         }
-        return new DefaultPeanutInstaller();
+        return new DefaultPeanutInstaller();*/
     }
 
     /**

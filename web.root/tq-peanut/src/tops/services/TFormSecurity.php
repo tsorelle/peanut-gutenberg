@@ -2,7 +2,12 @@
 
 namespace Tops\services;
 
-use Peanut\QnutDirectory\db\model\repository\PersonsRepository;
+use Peanut\contacts\db\model\repository\ContactsRepository;
+use Peanut\QnutDirectory\db\model\PersonsRepository;
+use Tops\db\IBasicContact;
+use Tops\db\IContactsRepository;
+use Tops\db\IProfilesRepository;
+use Tops\sys\TObjectContainer;
 use Tops\sys\TUser;
 
 class TFormSecurity
@@ -380,13 +385,23 @@ class TFormSecurity
         $authenticated = TUser::getCurrent()->isAuthenticated();
         $securityMessage = sprintf('Sender is an <strong>%s</strong> user<br>',
             $authenticated ? 'authenticated' : 'ANONYMOUS');
-        $repository = new PersonsRepository();
-        $persons = $repository->getPersonsByEmail($message->fromAddress);
+
+        /**
+         * @var $repository IContactsRepository
+         */
+        $repository = TObjectContainer::Get('contacts.repository');
+
+        /**
+         * @var $persons IBasicContact[]
+         */
+        $persons = $repository->getAllByEmail($message->fromAddress);
+
         $registered = '';
         if (!empty($persons)) {
-            $personName = $persons[0]->fullname;
+            $personName = $persons[0]->getFullName() ?? '';
             foreach ($persons as $person) {
-                if (!empty($person->accountId)) {
+                $accountId = $person->getAccountId();
+                if (!empty($accountId)) {
                     $personName = $person->fullname;
                     $registered = '(registered user)';
                     break;

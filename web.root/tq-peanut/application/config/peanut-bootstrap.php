@@ -7,14 +7,12 @@
  */
 
 namespace Peanut;
+use Tops\sys\TConfiguration;
 use Tops\sys\TKeyValuePair;
 use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 use Tops\sys\TStrings;
-use Peanut\sys\ViewModelManager;
 use Tops\sys\TWebSite;
-use function PHPUnit\Framework\directoryExists;
-
 
 class Bootstrap
 {
@@ -30,6 +28,25 @@ class Bootstrap
      */
     const scriptDirectoryLevel = 2;
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public static function readPeanutSettings($configPath = null): array
+    {
+        if ($configPath === null) {
+            $configPath = __DIR__;
+        }
+        $ini = parse_ini_file($configPath. '/settings.ini', true);
+        if ($ini === false) {
+            throw new \Exception('Settings file not found');
+        }
+        $settings = $ini['peanut'] ?? null;
+        if ($settings === null) {
+            throw new \Exception('Section [peanut] not found in Settings file');
+        }
+        return array($ini, $settings);
+    }
     private static function toPsr4Namespace($ns)
     {
         if (empty($ns)) {
@@ -44,66 +61,111 @@ class Bootstrap
         return $ns;
     }
 
+    public static function testAutoload($testPaths = []): void
+    {
+        // Check one class in each mapped path
+        $testPaths = array_merge($testPaths,  [
+            'Tops\sys\TUser',
+            'Peanut\sys\TVmContext',
+            'Peanut\PeanutPermissions\services\GetPermissionsCommand'
+        ]);
+        $testPaths = array_merge($testPaths,
+           include 'required-classes.php'
+        );
+
+        $failed = [];
+        if (class_exists('Tops\sys\TWebSite')) {
+            switch (TWebSite::GetCmsType()) {
+                case 'ConcreteCMS':
+                    $testPaths[] = 'Tops\concrete5\Concrete5AccountManager';
+                    break;
+                case 'WordPress':
+                    $testPaths[] = 'Tops\wordpress\TWordpressUser';
+                    break;
+                Case 'Nutshell' :
+                    $testPaths[] = 'Nutshell\cms\SiteMap';
+                    break;
+            }
+        }
+        else {
+            $failed[] = 'Tops\sys\TWebSite';
+        }
+        foreach ($testPaths as $path) {
+            if (!class_exists($path)) {
+                $failed[] = $path;
+            }
+        }
+        if (!empty($failed)) {
+            $list = implode('; ',$failed);
+            throw new \Exception('Failed to load test paths: '.$list);
+        }
+    }
+
+    public static function getPackageSources() {
+        $packageDir = DIR_PEANUT_ROOT.'/pnut/packages';
+        $packageList = [];
+        $files = scandir($packageDir);
+        foreach ($files as $package) {
+            // package must be a directory containing a package.ini file.
+            if ($package != '.' && $package != '..' && file_exists("$packageDir/$package/package.ini")) {
+                $ini = parse_ini_file("$packageDir/$package/package.ini", false);
+                if (isset($ini['namespace'])) {
+                    $namespace = $ini['namespace'];
+                }
+                else {
+                    $namespace = 'Peanut\\'.(TStrings::toCamelCase($package));
+                }
+                $source = "$packageDir/$package/src";
+                $packageList["$namespace"] = $source;
+            }
+        }
+        return $packageList;
+    }
+
+    public static function LoadEssentials() {
+        $loader = Autoloader::getInstance();
+        if (!defined('DIR_PEANUT_ROOT')) {
+            throw new \Exception('DIR_PEANUT_ROOT not defined');
+        }
+        $loader->addPsr4('Tops',DIR_PEANUT_ROOT.'/src/tops');
+        $test = class_exists('Tops\sys\TWebSite');
+        $loader->addPsr4('Peanut', DIR_PEANUT_ROOT.'/src/peanut');
+        $loader->addPsr4('Peanut\Application',DIR_APPLICATION.'/src');
+        $loader->addPsr4('Application', DIR_APPLICATION.'/peanut/src');
+        return $loader;
+    }
+
     public static function initialize($fileRoot=null) {
-        $fileRoot = self::getDocumentRoot();
+        $loader = self::LoadEssentials();
+
+        if ($fileRoot === null) {
+            $fileRoot = self::getDocumentRoot();
+        }
         if (!str_ends_with($fileRoot,'/')) {
             $fileRoot .= '/';
         }
-        $configPath = self::getRelativePath(__DIR__);
-        $applicationRoot = self::getRelativePath($configPath . '..');
 
-        $settings = self::getSettings();
-
-        $autoloadFile = $fileRoot.$settings->composerPath.'/autoload.php';
-
-        if (!file_exists($autoloadFile)) {
-            exit ("No autoload file: $autoloadFile");
+        $composerPath =  TConfiguration::getValue('composer','locations','../vendor');
+        $vendorAutoloadFile = DIR_ROOT.'/'.$composerPath.'/autoload.php';
+        if (!file_exists($vendorAutoloadFile)) {
+            exit ("No autoload file: $vendorAutoloadFile");
         }
-        include_once $autoloadFile;
+        include_once $vendorAutoloadFile;
 
-        $topsRoot = $settings->topsLocation;
-        $appSrcRoot = $settings->mvvmPath.'src';
-        $loader = Autoloader::getInstance();
-        $test = $fileRoot.$appSrcRoot;
-        $loader->addPsr4('Peanut\Application',$fileRoot.$appSrcRoot);
-        $loader->addPsr4('Tops',$fileRoot.$topsRoot);
-        $loader->addPsr4('Peanut',$fileRoot.$settings->peanutSrcLocation);
-        $loader->addPsr4('Application', $applicationRoot.'/src');
-
-        $packages = ViewModelManager::getPackageList();
-        if (!empty($packages)) {
-            $packagePath = ViewModelManager::getPackagePath();
-            foreach ($packages as $package) {
-                $namespace = null;
-                $iniPath = $fileRoot.$packagePath."/$package/package.ini";
-                if (file_exists($iniPath)) {
-                    $ini = parse_ini_file($iniPath, false);
-                    if (isset($ini['namespace'])) {
-                        $namespace = $ini['namespace'];
-                    }
-                }
-
-                if (!$namespace) {
-                    $namespace = 'Peanut\\'.TStrings::toCamelCase($package);
-                }
-                $srcRoot = $fileRoot.$packagePath."/$package/src";
-                $loader->addPsr4($namespace.'\\', $srcRoot);
-            }
+        $packages = self::getPackageSources();
+        foreach ($packages as $namespace => $srcRoot) {
+            $loader->addPsr4($namespace, $srcRoot);
+        }
+        $autoloadItems = TConfiguration::getIniSection('autoload',[]);
+        foreach ($autoloadItems as $namespace => $srcRoot) {
+            // todo: review and consider nested str_replace
+            $srcRoot = str_replace('[pnut-src]',DIR_PEANUT_ROOT.'/src',$srcRoot);
+            $srcRoot = str_replace('[app-src]',DIR_APPLICATION.'/src',$srcRoot);
+            // $srcRoot = str_replace('\\',DIRECTORY_SEPARATOR,$srcRoot);
+            $loader->addPsr4($namespace, $srcRoot);
         }
 
-
-        foreach ($settings->autoloadItems as $namespace => $srcRoot) {
-            $srcRoot = str_replace('[pnut-src]',$settings->srcLocation,$srcRoot);
-            $srcRoot = str_replace('[app-src]','application/src',$srcRoot);
-            $srcRoot = str_replace('\\',DIRECTORY_SEPARATOR,$srcRoot);
-            $p = $fileRoot.$srcRoot;
-            $loader->addPsr4($namespace . '\\', $fileRoot.$srcRoot);
-        }
-
-        // $test = class_exists('Application\mailgun\WebhookHandler');
-        $test = class_exists('Peanut\sys\ViewModelManager');
-
-        TPath::Initialize($fileRoot);
+        TPath::Initialize();
 
         // note: these lines needed for Tops security token handling.
         // however on some CMS systems (e.g. Concrete5) it interferes with the CMS'
@@ -112,8 +174,8 @@ class Bootstrap
         // session_start();
         // \Tops\sys\TSession::Initialize();
 
-
-        if ($settings->language !== 'en-us') {
+        $language = TConfiguration::getValue('language','peanut','en-us');
+        if ($language !== 'en-us') {
             $translations = TLanguage::getTranslations(
                 array(
                     'wait-please',
@@ -126,13 +188,17 @@ class Bootstrap
             TKeyValuePair::CreateCookie($translations,'peanutTranslations');
         }
         else  if (isset($_COOKIE['peanutTranslations'])) {
+            // remove cookies
             setcookie('peanutTranslations', '', time() - 3600, '/');
             setcookie('peanutTranslations', '', time() - 3600, '/peanut/service');
             setcookie('peanutTranslations', '', time() - 3600, '/peanut');
             unset($_COOKIE['peanutTranslations']);
         }
-
-        return $settings;
+        $response = new \stdClass();
+        $response->optimize = (
+            TConfiguration::getValue('optimize','peanut',0)) == 1;
+        $response->loader = $loader;
+        return $response;
     }
 
     private static function getCssOverrides() {
@@ -200,40 +266,29 @@ class Bootstrap
         return $path;
     }
 
-    public static function getSettings()
+    public static function getSettings() : \stdClass
     {
-
-        $root = '/';
-        $configPath = self::getRelativePath(__DIR__);
-
-        $applicationPath = self::getRelativePath(__DIR__ . '/..');
-
-        $ini = parse_ini_file(__DIR__ . '/settings.ini', true);
-
-        $settings = $ini['peanut'];
+        // assumes cwd in config
+        list($ini, $settings) = self::readPeanutSettings();
         $result = new \stdClass();
-
-        $libDefaults = array(// 'lodash' => 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
-        );
+        $libDefaults = [];
         if (empty($ini['libraries'])) {
             $result->libraries = $libDefaults;
         } else {
             $result->libraries = $ini['libraries'];
+            foreach ($result->libraries as $key => $value) {
+                $result->libraries[$key] = str_replace('@application', URL_APPLICATION, $value);
+            }
             foreach ($libDefaults as $key => $value) {
                 if (!array_key_exists($key, $result->libraries)) {
                     $result->libraries[$key] = $value;
                 }
             }
         }
-
-        $modulePath = (empty($settings['modulePath']) ? 'modules' : $settings['modulePath']);
-        $peanutRoot = (empty($settings['peanutRootPath']) ? "$modulePath/pnut" : $settings['peanutRootPath']);
-        $peanutPath = $root . $peanutRoot;
-        $mvvmPath = (empty($settings['mvvmPath']) ?  $applicationPath.'peanut' : $root.$settings['mvvmPath']);
-        $corePath = $root . (empty($settings['corePath']) ? $peanutRoot . '/core' : $settings['corePath']);
-        $packagePath = $root . (empty($settings['packagePath']) ? $peanutRoot . "/packages" : $settings['packagePath']);
-        $srcLocation = empty($ini['locations']['src']) ? "$modulePath/src" : $ini['locations']['src'];
-
+        $peanutRoot = URL_PEANUT_ROOT.'/pnut';
+        $corePath = "$peanutRoot/core";
+        $packagePath = "$peanutRoot/packages";
+        $mvvmPath = URL_APPLICATION. "/peanut";
         if (isset($settings['optimize'])) {
             $optimize = $settings['optimize'] == 0 ? false : true;
         } else {
@@ -244,7 +299,7 @@ class Bootstrap
         // $result->dependencies = ["$corePath/lib/knockout/knockout-3.5.1.js"];
         $result->dependencies = ["https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js"];
         $dependencies = empty($settings['dependencies']) ?
-            [] // ['ajax']
+            [] 
             : explode(',', $settings["dependencies"]);
         foreach ($dependencies as $dependency) {
             switch ($dependency) {
@@ -270,23 +325,19 @@ class Bootstrap
             $result->dependencies[] = "$corePath/ViewModelBase.js";
         }
         $result->applicationVersionNumber = empty($settings['applicationVersionNumber']) ? '0.0' : $settings['applicationVersionNumber'];
-        $result->commonRootPath = $root;
-        $result->applicationPath = $applicationPath;
-        $result->libraryPath = empty($settings['libraryPath']) ? $result->applicationPath . "assets/js/libraries/" : $settings['libraryPath'] . '/';
-        $result->stylesPath = empty($settings['stylesPath']) ? $result->applicationPath . "assets/styles/" : $settings['stylesPath'] . '/';
-        $result->peanutRootPath = $peanutPath . '/';
-        $result->corePath = $peanutPath . '/core/';
+        $result->commonRootPath = '/';
+        $result->peanutRootPath = $peanutRoot . '/';
+        $result->applicationPath = URL_APPLICATION.'/';
+        $result->libraryPath = $result->applicationPath . "assets/js/libraries/";
+        $result->stylesPath = $result->applicationPath . "assets/styles/";
+        $result->corePath = $corePath . '/';
         $result->packagePath = $packagePath . '/';
         $result->mvvmPath = $mvvmPath . '/';
+
         $result->serviceUrl = empty($settings['serviceUrl']) ? '/peanut/service/execute' : $settings['serviceUrl'];
         $result->vmNamespace = empty($settings['vmNamespace']) ? 'Peanut' : $settings['vmNamespace'];
         $result->uiExtension = empty($settings['uiExtension']) ? 'BootstrapFA' : $settings['uiExtension'];
-        $result->srcLocation = $srcLocation;
-        $result->topsLocation = empty($ini['locations']['tops']) ? "$srcLocation/tops" : $ini['locations']['tops'];
-        $result->peanutSrcLocation = "$srcLocation/peanut";
-        $result->autoloadItems = empty($ini['autoload']) ? array() : $ini['autoload'];
-        $result->peanutUrl = empty($ini['pages']['peanutUrl']) ? 'peanut' : $ini['pages']['peanutUrl'];
-        $result->composerPath = empty($ini['locations']['composer']) ? '../vendor' : $ini['locations']['composer'];
+
         $result->language = empty($settings['language']) ? 'en-us' : $settings['language '];
         if (empty($settings['loggingMode'])) {
             $result->loggingMode = $optimize ?
@@ -297,7 +348,6 @@ class Bootstrap
         }
         $result->optimize = $optimize;
         $result->cssOverrides = self::getCssOverrides();
-
         return $result;
     }
 }

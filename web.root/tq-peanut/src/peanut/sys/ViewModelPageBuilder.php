@@ -31,7 +31,7 @@ class ViewModelPageBuilder
         if($templatePath == null) {
             $templatePath = TPath::fromFileRoot('application/assets/templates');
         }
-        $theme = PeanutSettings::GetThemeName();
+        $theme = TConfiguration::getValue('theme','pages','bootstrap');
         return [
             'theme' => $theme,
             'head' => $this->getTemplate('head',$templatePath),
@@ -72,7 +72,7 @@ class ViewModelPageBuilder
                 [
                     'title' => $settings->pageTitle,
                     'heading' => $settings->heading,
-                    'loader' => PeanutSettings::GetPeanutLoaderScript(),
+                    'loader' => $this->GetPeanutLoaderScript(),
                     'content' => $view,
                     'vmname' => $settings->vmName
                 ]));
@@ -141,7 +141,8 @@ class ViewModelPageBuilder
                 $content = "<strong><a href='/'>$content >></a></strong>";
                 break;
             case 'not-authenticated' :
-                $href = PeanutSettings::GetLoginPage();
+                // $href = PeanutSettings::GetLoginPage();
+                $href = TConfiguration::getValue('login-page','pages','login');
                 $content = "<strong><a href='/$href'>$content >></a></strong>";
                 break;
             case 'page-not-found' :
@@ -150,5 +151,12 @@ class ViewModelPageBuilder
         }
 
         return $builder->buildMessage($message, $content, $title, $alert, $templatePath);
+    }
+
+    private function GetPeanutLoaderScript() : String
+    {
+        $optimize = TConfiguration::getBoolean('optimize','peanut');
+        $script = $optimize ? 'dist/loader.min.js' : 'core/PeanutLoader.js';
+        return  DIR_PEANUT_ROOT."/pnut/$script";
     }
 }

@@ -18,8 +18,11 @@ use Tops\sys\TPath;
 
 class PeanutTranslator extends TIniTranslator
 {
+    /**
+     * @throws \Exception
+     */
     public static function GetPeanutTranslations(&$ini = false) {
-        $peanutIniPath = PeanutSettings::FromPeanutRoot('translations.ini');
+        $peanutIniPath = DIR_PEANUT_ROOT.'/pnut/translations.ini';
 
         if ($ini === false) {
             $ini = TIniSettings::Open($peanutIniPath);
@@ -27,12 +30,11 @@ class PeanutTranslator extends TIniTranslator
         else {
             TIniFileMerge::Import($peanutIniPath,$ini);
         }
-        $fileRoot = TPath::getFileRoot();
         $packages = ViewModelManager::getPackageList();
         if (!empty($packages)) {
-            $packagePath = ViewModelManager::getPackagePath();
+            $packageDir = ViewModelManager::getPackageDir();
             foreach ($packages as $package) {
-                $inipath =  $fileRoot.$packagePath."/$package/config/translations.ini";
+                $inipath =  $packageDir."/$package/config/translations.ini";
                 TIniFileMerge::Import($inipath,$ini);
             }
         }

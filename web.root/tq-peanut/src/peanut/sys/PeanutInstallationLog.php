@@ -10,6 +10,10 @@ namespace Peanut\sys;
 
 use Tops\sys\TPath;
 
+/**
+ * Class PeanutInstallationLog
+ * DEPRECATED and not supported
+ */
 class PeanutInstallationLog
 {
     /**
@@ -27,6 +31,9 @@ class PeanutInstallationLog
     const UninstallStartedMessage = 'uninstall started';
     const LogFileName = 'peanut-installation.log';
 
+    public function __construct() {
+        throw new \Exception('PeanutInstallationLog deprecated and not supported.');
+    }
     public function getSession() {
         if (!isset($this->session)) {
             throw new \Exception('Installation session was not initialized with startSession()');

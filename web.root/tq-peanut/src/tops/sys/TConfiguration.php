@@ -78,26 +78,25 @@ class TConfiguration
     private static function loadIni($fileName = 'settings.ini', $iniPath = null)
     {
 
+
         if ($iniPath === null) {
-            $iniPath = TPath::getConfigPath() . $fileName;
+            $iniPath = TPath::getConfigPath().$fileName;
         } else {
             $iniPath = TPath::combine($iniPath, $fileName);
         }
         if (file_exists($iniPath)) {
-            $result = @parse_ini_file($iniPath, true);
+            $result = parse_ini_file($iniPath, true);
             if ($result === false) {
                 self::$isValid = false;
                 // php8 compatible
                 $lastError = error_get_last();
                 $errMsg = $lastError['message'] ??  'Could not parse ini file at ' . $iniPath;
-                if (self::$throwExceptions) {
-                    throw new \Exception($errMsg);
-                }
-                return array('errors' => array($fileName => $errMsg));
+                throw new \Exception($errMsg);
             }
             return $result;
         } else {
-            $fileNotFound = sprintf(TLanguage::text('error-no-file'),$iniPath);
+            // note: has to be in English since translation services dont work if TCongiguration is not functioning.
+            $fileNotFound = sprintf("No configuration file found at '%s'",$iniPath);
             if (self::$requireFiles) {
                 throw new \Exception("Ini error: $fileNotFound");
             }

@@ -9,8 +9,8 @@
   "include"  : [
 //      "web.root/**/*",
     "temp",
-      "web.root/application/peanut/**/*",
-      "web.root/nutshell/pnut/**/*"
+      "web.root/tq-peanut/application/peanut/**/*",
+      "web.root/tq-peanut/pnut/**/*"
     //    "web.root/tests/js/**/*",
 //    "web.root/modules/pnut/core/**/*",
 //    "web.root/modules/pnut/components/**/*",
