@@ -1,0 +1,51 @@
+[Return to docs home page](../index.md)
+# Typescript
+## Compilation
+
+For the current austinquakers.org version as of December 9, 2024, 
+we set the target compilation to ES6 or ES2015.  In tsconfig.json:
+````
+  "compilerOptions": {
+    "target": "ES2015",
+    . . .
+  },
+````
+
+Previously we did not set the compilation target version and Typescript select a low version. 
+I found in development this version does to support some javascript iteration
+array functions like find or filter.  Raising the target to ES6 fixed this.
+
+The tsconfig.json should also have an "include" and an "exclude" section
+to indicate the directories for full compilation.  Additional directories
+may be added as needed.
+
+Here is the full configuration:
+
+```typescript
+{
+  "compilerOptions": {
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "target": "ES2015",
+    "forceConsistentCasingInFileNames": false
+  },
+  "include"  : [
+    "web.root/application/peanut/components/**/*",
+    "web.root/application/peanut/tests/components/**/*",
+    "web.root/application/peanut/tests/vm/**/*",
+    "web.root/application/peanut/vm/**/*",
+    "web.root/application/tests/peanut/vm/**/*",
+    "web.root/packages/knockout_view/pnut/admin/**/*",
+    "web.root/packages/knockout_view/pnut/components/**/*",
+    "web.root/packages/knockout_view/pnut/core/**/*",
+    "web.root/packages/knockout_view/pnut/extensions/**/*",
+    "web.root/packages/knockout_view/pnut/packages/**/*",
+    "web.root/packages/knockout_view/pnut/packages/**/*",
+    "web.root/tests/js/**/*"
+  ],
+  "exclude": [
+    "web.root/packages/knockout_view/typings/**/*"
+  ]
+}
+```
