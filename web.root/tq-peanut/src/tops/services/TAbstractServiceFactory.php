@@ -62,6 +62,10 @@ abstract class TAbstractServiceFactory
         $input = $inputHandler->getValues(['serviceCode','sid']);
         if (isset($input->request)) {
             $input = json_decode($input->request);
+            $error = json_last_error_msg();
+            if ($error !== 'No error') {
+                throw new \Exception("JSON decoding error: $error");
+            }
         }
         $response = $cmd->execute($input, $securityToken);
         return $response;
