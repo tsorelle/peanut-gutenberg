@@ -1,4 +1,4 @@
-[Return to docs home page](../../index.html)
+[Return to docs home page](../index.md)
 # Components in Peanut
 
 Knockout view models can be reused across pages on a web site.  Knockout 

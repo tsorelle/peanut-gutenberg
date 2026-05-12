@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 ## ViewModel event handlers
 
 The handle event method is typically used for communication between objects such as knockout components

@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 # Peanut Patterns
 ## ViewModel > ServiceCommand > Repository
 
@@ -44,6 +44,7 @@ me.services.executeService('peanut.Mailboxes::GetMailboxList',request,
             me.owner.addTranslations(response.translations);
             me.setMailboxes(response.list)
         }
+    
 ````
 The initial parameter of "executeService" tells us the name an location of the service command
 By convention this will be TGetMailboxListCommand.  For new, we'll skip explaining the connecting

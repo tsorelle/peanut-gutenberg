@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 # Service Commands
 
 Service commands are PHP classes that respond to incoming requests posted

@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 # Peanut UI Messages
 
 Two kinds of messages are built into the system:

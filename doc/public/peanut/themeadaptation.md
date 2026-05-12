@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 # Theme Adaptation
 
 ## Current supported CMS

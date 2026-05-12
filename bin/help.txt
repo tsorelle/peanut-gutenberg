@@ -1,0 +1,14 @@
+Developer command line utilities:
+To be run from PowerScript prompt at project root.
+
+processmail:
+Runs email queue processing.
+usage: php .\bin\processemail.php
+
+build-docs:
+Convert markdown files in doc/public to html in web.root/application/docs
+usage:  php .\bin\build-docs.php all | [file name]
+
+update-composer:
+Update composer file in project root
+usage: .\update-composer.ps1

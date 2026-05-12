@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 # View Models and Views
 
 The key technology used for the presentation parts of Peanut is the KnockoutJS, a 

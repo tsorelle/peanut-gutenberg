@@ -1,4 +1,4 @@
-[Return to docs home page](../../index.html)
+[Return to docs home page](../index.md)
 # selectListObservable
 Type: knockout component
 

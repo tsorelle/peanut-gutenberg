@@ -1,4 +1,4 @@
-[Return to docs home page](../../index.html)
+[Return to docs home page](../index.md)
 # lookupEditComponent
 This component allows the a data management page for any entity that supports the ILookupItem interface.
 

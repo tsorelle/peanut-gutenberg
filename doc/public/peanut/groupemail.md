@@ -1,4 +1,4 @@
-[Return to docs home page](../../index.html)
+[Return to docs home page](../../index.md)
 # Group Email Component
 The Group EMail component is used to present a message editor as part of a page routine to send email messages to a
 small group such as a committee, comunity group or distribution list. Additionally the component may present a list

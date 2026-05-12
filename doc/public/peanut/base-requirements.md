@@ -1,4 +1,4 @@
-[Return to docs home page](../index.html)
+[Return to docs home page](../index.md)
 # Base Requirements for Latest Core
 
 updated: 12/14/2025

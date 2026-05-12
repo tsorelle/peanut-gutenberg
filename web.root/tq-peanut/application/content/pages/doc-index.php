@@ -16,12 +16,12 @@
 </ul>
 <h3>Components</h3>
 <ul>
-<li><a href="/tq-peanut/application/docs/peanut/components/overview.html">Overview</a></li>
-<li><a href="/tq-peanut/application/docs/peanut/components/lookupedit.html">Lookup Edit</a></li>
-<li><a href="/tq-peanut/application/docs/peanut/components/modalconfirm.html">Modal Confirm</a></li>
-<li><a href="/tq-peanut/application/docs/peanut/components/multiselect.html">Multi-Select</a></li>
-<li><a href="/tq-peanut/application/docs/peanut/components/searchlist.html">Search List</a></li>
-<li><a href="/tq-peanut/application/docs/peanut/components/selectlistobservable.html">Search List Observable</a></li>
+<li><a href="/tq-peanut/application/docs/components/components-overview.html">Overview</a></li>
+<li><a href="/tq-peanut/application/docs/components/lookupedit.html">Lookup Edit</a></li>
+<li><a href="/tq-peanut/application/docs/components/modalconfirm.html">Modal Confirm</a></li>
+<li><a href="/tq-peanut/application/docs/components/multiselect.html">Multi-Select</a></li>
+<li><a href="/tq-peanut/application/docs/components/searchlist.html">Search List</a></li>
+<li><a href="/tq-peanut/application/docs/components/selectlistobservable.html">Search List Observable</a></li>
 </ul>
 <h2>WordPress</h2>
 <h3>Content Management</h3>

@@ -1,4 +1,4 @@
-[Return to docs home page](../../index.html)
+[Return to docs home page](../../index.md)
 # Peanut UI Components
 Notes from SCYM project may apply to or be adapted in the FMA project.
 

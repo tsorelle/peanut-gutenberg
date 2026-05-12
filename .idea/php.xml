@@ -10,6 +10,11 @@
     <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
   </component>
+  <component name="PhpCodeSniffer">
+    <phpcs_settings>
+      <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="5188115f-3a58-48f6-8cc0-4fdc6b1a317f" beautifier_path="$PROJECT_DIR$/../../vendorbuild/vendor/bin/phpcbf.bat" tool_path="D:/dev/twoquakers/vendorbuild/vendor/bin/phpcs.bat" />
+    </phpcs_settings>
+  </component>
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
@@ -73,6 +78,11 @@
   <component name="PhpProjectSharedConfiguration" php_language_level="8.4">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="5188115f-3a58-48f6-8cc0-4fdc6b1a317f" timeout="60000" />
+    </PhpStan_settings>
+  </component>
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -80,6 +90,11 @@
     <phpunit_settings>
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
     </phpunit_settings>
+  </component>
+  <component name="Psalm">
+    <Psalm_settings>
+      <psalm_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="5188115f-3a58-48f6-8cc0-4fdc6b1a317f" tool_path="$PROJECT_DIR$/../../vendorbuild/vendor/bin/psalm.bat" />
+    </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />

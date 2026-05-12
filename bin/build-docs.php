@@ -67,7 +67,7 @@ foreach($files as $filename) {
     $srcFile = "$srcPath/".$filename;
     print  "Processing: $srcFile...";
     // $filename = pathinfo($srcFile, PATHINFO_FILENAME);
-    $outFile = str_ireplace('.md','.html',"$docPath/$filename");
+
     $content = \Tops\sys\TParseDown::ParseMdFile($srcFile);
     $content = str_ireplace('../../index.md', $indexFileUrl, $content);
     $content = str_ireplace('../index.md', $indexFileUrl, $content);
@@ -75,6 +75,7 @@ foreach($files as $filename) {
     print "\n";
     $title = 'Peanut Documentation';
     $content = sprintf($template,$title,$content);
+    $outFile = str_ireplace('.md','.html',"$docPath/$filename");
     print "\nWriting: $outFile...";
     $outDir = dirname($outFile);
     if (!is_dir($outDir) && !mkdir($outDir, 0777, true) && !is_dir($outDir)) {
@@ -116,6 +117,11 @@ if ($source === 'all') {
     }
     print "\nWriting index file: $outFile...\n";
     file_put_contents($outFile,$content);
+    print "\nWriting css file: $outFile...\n";
+    $sourceFile = "$srcPath/markdown.css";
+    $destFile = "$docPath/markdown.css";
+    copy($sourceFile, $destFile);
+
 }
 
 print "Done.\n";

@@ -14,12 +14,12 @@
 - [Trouble Shooting](notes/trouble-shoot.md)
 
 ### Components
-- [Overview](peanut/components/overview.md)
-- [Lookup Edit](peanut/components/lookupedit.md)
-- [Modal Confirm](peanut/components/modalconfirm.md)
-- [Multi-Select](peanut/components/multiselect.md)
-- [Search List](peanut/components/searchlist.md)
-- [Search List Observable](peanut/components/selectlistobservable.md)
+- [Overview](components/components-overview.md)
+- [Lookup Edit](components/lookupedit.md)
+- [Modal Confirm](components/modalconfirm.md)
+- [Multi-Select](components/multiselect.md)
+- [Search List](components/searchlist.md)
+- [Search List Observable](components/selectlistobservable.md)
 
 ## WordPress 
 

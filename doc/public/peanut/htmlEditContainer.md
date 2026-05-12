@@ -1,4 +1,4 @@
-[Return to docs home page](../../index.html)
+[Return to docs home page](../../index.md)
 # TinyMce with htmlEditContainer
 
 HtmlEditContainer is a Typescript class designed as a facade to simplify initialization and control of the TinyMce editor.
