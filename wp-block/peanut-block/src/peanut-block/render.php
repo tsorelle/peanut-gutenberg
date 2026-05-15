@@ -16,15 +16,14 @@ if ( ! empty( $attributes['viewmodel'] ) && class_exists( '\Peanut\sys\ViewModel
 		$attributes['vmcontext'] ?? null
 	);
 }
+if ( is_admin() || is_customize_preview() ) {
+	echo get_block_wrapper_attributes();
+	$content = sprintf(
+		'<p>Peanut block<br>VM: %s</p>',$attributes['viewmodel']
+	);
+}
+else {
+	$content = '<p>VIEW GOES HERE</p>';
+}
+print $content;
 ?>
-<p <?php echo get_block_wrapper_attributes(); ?>>
-	<?php esc_html_e( 'Peanut Block – hello from a dynamic block!', 'peanut-block' ); ?>
-	<?php if ( ! empty( $attributes['viewmodel'] ) ) : ?>
-		<br />
-		<small>VM: <?php echo esc_html( $attributes['viewmodel'] ); ?></small>
-	<?php endif; ?>
-	<?php if ( ! empty( $attributes['vmcontext'] ) ) : ?>
-		<?php if ( ! empty( $attributes['viewmodel'] ) ) echo ' | '; ?>
-		<small>Context: <?php echo esc_html( $attributes['vmcontext'] ); ?></small>
-	<?php endif; ?>
-</p>
