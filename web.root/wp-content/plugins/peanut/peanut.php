@@ -94,14 +94,6 @@ function peanut_scripts() {
     }
 }
 
-add_action('wp_footer', 'render_peanut_start_script', 999);
-
-function render_peanut_start_script() {
-    if (\Peanut\sys\ViewModelManager::hasVm()) {
-        \Peanut\sys\ViewModelManager::RenderStartScript();
-    }
-}
-
 // todo: see if this is still needed, if so add from legacy project
 // add_filter('the_content','peanut_content');
 // function peanut_content($input)
@@ -126,3 +118,15 @@ function peanut_deactivation() {
 }
 // register_deactivation_hook(__FILE__, 'peanut_deactivation' );
 
+// In a plugin or functions.php
+add_action( 'wp_footer', function() {
+    // 1. Ensure we are NOT in the editor
+    if ( is_admin() || is_customize_preview() ) {
+        return;
+    }
+
+    // 2. Run your global initialization
+    if ( class_exists('\Peanut\sys\ViewModelManager') ) {
+        \Peanut\sys\ViewModelManager::RenderStartScript();
+    }
+}, 100 ); // High priority (100) ensures it runs at the very bottom

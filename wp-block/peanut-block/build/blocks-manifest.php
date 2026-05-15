@@ -21,6 +21,16 @@ return array(
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
 		'render' => 'file:./render.php',
-		'viewScript' => 'file:./view.js'
+		'viewScript' => 'file:./view.js',
+		'attributes' => array(
+			'viewmodel' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'vmcontext' => array(
+				'type' => 'string',
+				'default' => ''
+			)
+		)
 	)
 );

@@ -16,5 +16,15 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render.php",
-  "viewScript": "file:./view.js"
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "viewmodel": {
+      "type": "string",
+      "default": ""
+    },
+    "vmcontext": {
+      "type": "string",
+      "default": ""
+    }
+  }
 }

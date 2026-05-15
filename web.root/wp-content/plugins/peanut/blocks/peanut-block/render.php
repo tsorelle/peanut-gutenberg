@@ -9,11 +9,22 @@
  *
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
+
+if ( ! empty( $attributes['viewmodel'] ) && class_exists( '\Peanut\sys\ViewModelManager' ) ) {
+	\Peanut\sys\ViewModelManager::getViewModelSettings(
+		$attributes['viewmodel'],
+		$attributes['vmcontext'] ?? null
+	);
+}
 ?>
 <p <?php echo get_block_wrapper_attributes(); ?>>
-	<?php
-	$post_id = get_the_ID();
-	//todo: replace with peanut render function
-		esc_html_e( 'Peanut Block – initial testing: post #'.$post_id, 'peanut-block' );
-		?>
+	<?php esc_html_e( 'Peanut Block – hello from a dynamic block!', 'peanut-block' ); ?>
+	<?php if ( ! empty( $attributes['viewmodel'] ) ) : ?>
+		<br />
+		<small>VM: <?php echo esc_html( $attributes['viewmodel'] ); ?></small>
+	<?php endif; ?>
+	<?php if ( ! empty( $attributes['vmcontext'] ) ) : ?>
+		<?php if ( ! empty( $attributes['viewmodel'] ) ) echo ' | '; ?>
+		<small>Context: <?php echo esc_html( $attributes['vmcontext'] ); ?></small>
+	<?php endif; ?>
 </p>
