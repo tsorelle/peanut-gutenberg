@@ -25,6 +25,10 @@
     "vmcontext": {
       "type": "string",
       "default": ""
+    },
+    "debugMode": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

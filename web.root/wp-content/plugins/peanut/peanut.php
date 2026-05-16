@@ -77,26 +77,26 @@ function peanut_scripts() {
         }
         $dependencies[] = 'jquery';
 */
-        $optimized = \Tops\sys\TConfiguration::getBoolean('optimize','peanut',true);
-        $loaderScript = $optimized ? 'peanut-loader.min.js' : 'PeanutLoader.js';
-
-        $peanutVersion = ViewModelManager::GetPeanutVersion();
-        wp_enqueue_script(
-            'peanut-head-load-js',
-            'https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.js',
-            array(),
-            '1.0.3',
-            true
-        );
-
-        wp_enqueue_script('peanut-loader-js', "/tq-peanut/pnut/core/$loaderScript",
-            ['peanut-head-load-js'], $peanutVersion, true);
     }
 }
 
 add_action('wp_footer', 'render_peanut_start_script', 999);
 
 function render_peanut_start_script() {
+    $optimized = \Tops\sys\TConfiguration::getBoolean('optimize','peanut',true);
+    $loaderScript = $optimized ? 'peanut-loader.min.js' : 'PeanutLoader.js';
+
+    $peanutVersion = ViewModelManager::GetPeanutVersion();
+    wp_enqueue_script(
+        'peanut-head-load-js',
+        'https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.js',
+        array(),
+        '1.0.3',
+        true
+    );
+
+    wp_enqueue_script('peanut-loader-js', "/tq-peanut/pnut/core/$loaderScript",
+        ['peanut-head-load-js'], $peanutVersion, true);
     if (\Peanut\sys\ViewModelManager::hasVm()) {
         \Peanut\sys\ViewModelManager::RenderStartScript();
     }

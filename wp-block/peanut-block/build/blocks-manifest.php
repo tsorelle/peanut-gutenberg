@@ -30,6 +30,10 @@ return array(
 			'vmcontext' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'debugMode' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)
