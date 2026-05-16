@@ -10,36 +10,42 @@
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
 if (!class_exists( '\Peanut\sys\ViewModelManager' ) ) {
-
 	print '<p>Error: Peanut system is not initialized.</p>';
 }
-else  if ( ! empty( $attributes['viewmodel'] ) ) {
-	\Peanut\sys\ViewModelManager::getViewModelSettings(
-		$attributes['viewmodel'],
-		$attributes['vmcontext'] ?? null,
-		$attributes['debugMode'] ?? false
+else if (empty( $attributes['viewmodel'] ))  {
+	print '<p>Error: View model code is missing.</p>';
+}
+else
+{
+	$debugMode = $attributes['debugMode'] ?? false;
+	$vmCode = $attributes['viewmodel'];
+	$vmContext = $attributes['vmcontext'] ?? null;
+	$vmSettings = \Peanut\sys\ViewModelManager::getViewModelSettings(
+		$vmCode,
+		$vmContext
 	);
-	if (!empty($attributes['debugMode'])) {
-		print('<p>VM: '.$attributes['viewmodel'].'</p>');
-		var_dump($attributes['viewmodel']);
+
+	if (empty($vmSettings)) {
+		if ($debugMode) {
+			print "<p>No settings found for '$vmCode'</p>";
+		}
 	}
 	else {
-		// \Peanut\sys\ViewModelManager::RenderViewModel($attributes['viewmodel']);
-		print ('<p>View to be rendered here</p>');
+		if ($debugMode) {
+			print "<p>VM: $vmCode</p><pre>";
+			var_dump($vmSettings);
+			print "</pre>";
+		}
+		else {
+//			$viewContent = '<p>View to be rendered here</p>';
+			$viewFile = DIR_ROOT . '/' . $vmSettings->view;
+			$viewContent =  file_get_contents(DIR_ROOT . '/' . $vmSettings->view);
+			print $viewContent;
+		}
 	}
+	unset($debugMode);
+	unset($vmCode);
+	unset($viewContent);
+	unset($vmSettings);
 }
-else {
-	print '<p>No viewmodel specified</p>';
-}
-
-/*if ( is_admin() || is_customize_preview() ) {
-	echo get_block_wrapper_attributes();
-	$content = sprintf(
-		'<p>Peanut block<br>VM: %s</p>',$attributes['viewmodel']
-	);
-}
-else {
-	$content = '<p>VIEW GOES HERE</p>';
-}
-print $content;*/
 ?>
