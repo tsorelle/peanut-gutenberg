@@ -4,7 +4,7 @@
 /temp/
 /novcs/
 /build/
-
+/wp-block/peanut-block/build/
 /web.root/wp-admin/
 /web.root/wp-includes/
 /web.root/wp-*
