@@ -142,6 +142,12 @@ declare namespace Peanut {
 
     }
 
+    export interface IServicePromise<T> extends Promise<T> {
+        done(callback: (value: T) => void): IServicePromise<T>;
+        fail(callback: (reason: any) => void): IServicePromise<T>;
+        always(callback: () => void): IServicePromise<T>;
+    }
+
     export interface    INameValuePair {
         Name: string;
         Value: any;

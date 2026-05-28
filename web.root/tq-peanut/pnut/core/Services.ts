@@ -3,7 +3,6 @@
  */
 /// <reference path='./Peanut.d.ts' />
 /// <reference path='./PeanutLoader.ts' />
-/// <reference path='../../typings/jquery/jquery.d.ts' />
 namespace Peanut {
     export const allMessagesType = -1;
     export const infoMessageType = 0;
@@ -159,31 +158,63 @@ namespace Peanut {
             return true;
         };
 
+        private wrapPromise(promise: Promise<any>) : IServicePromise<any> {
+            let result = promise as any;
+            result.done = (callback: any) => {
+                promise.then(callback);
+                return result;
+            };
+            result.fail = (callback: any) => {
+                promise.catch(callback);
+                return result;
+            };
+            result.always = (callback: any) => {
+                promise.then(callback, callback);
+                return result;
+            };
+            return result;
+        }
 
 
-        getSecurityToken(successFunction?: (serviceResponse: IServiceResponse) => void) : JQueryPromise<any> {
-            let serviceRequest = { "serviceCode" : 'getxsstoken'};
+
+        getSecurityToken(successFunction?: (serviceResponse: IServiceResponse) => void) : IServicePromise<any> {
             if (!Peanut.Config.loaded) {
                 throw "Peanut.config must be initialized before ajax call."
             }
-            let result =
-                jQuery.ajax({
-                    type: "POST",
-                    data: serviceRequest,
-                    dataType: "json",
-                    cache: false,
-                    url: Peanut.Config.values.serviceUrl
-                })
-                    .done(
-                        successFunction
-                    );
 
-            return result;
+            const body = new URLSearchParams();
+            body.append('serviceCode', 'getxsstoken');
+
+            let promise = fetch(Peanut.Config.values.serviceUrl, {
+                method: 'POST',
+                body: body,
+                cache: 'no-cache'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw response;
+                }
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw { message: "Invalid JSON response from server", details: text };
+                    }
+                });
+            })
+            .then(serviceResponse => {
+                if (successFunction) {
+                    successFunction(serviceResponse);
+                }
+                return serviceResponse;
+            });
+
+            return this.wrapPromise(promise);
         };
 
         executeRPC = (requestMethod: string, serviceName: string, parameters: any = "",
                       successFunction?: (serviceResponse: IServiceResponse) => void,
-                      errorFunction?: (errorMessage: any) => void) : JQueryPromise<any> => {
+                      errorFunction?: (errorMessage: any) => void) : IServicePromise<any> => {
 
             if (!Peanut.Config.loaded) {
                 throw "Peanut.config must be initialized before ajax call."
@@ -200,46 +231,70 @@ namespace Peanut {
                 parameters = JSON.stringify(parameters);
             }
 
-            let serviceRequest = {
+            let serviceRequest : any = {
                 "serviceCode" : serviceName,
                 "topsSecurityToken": me.securityToken,
                 "request" : parameters};
 
-            let result =
-                jQuery.ajax({
-                    type: requestMethod, // "POST",
-                    data: serviceRequest,
-                    dataType: "json",
-                    cache: false,
-                    url: url
-                })
-                    .done(
-                        function(serviceResponse) {
-                            if (serviceResponse.debugInfo !== undefined) {
-                                me.handleServiceFailure(serviceResponse.debugInfo);
-                            }
-                            me.showServiceMessages(serviceResponse);
-                            if (successFunction) {
-                                successFunction(serviceResponse);
-                            }
-                        }
-                    )
-                    .fail(
-                        function(jqXHR, textStatus ) {
-                            me.errorMessage = me.showExceptionMessage(jqXHR);
-                            me.errorInfo = (jqXHR) ? jqXHR.responseText : '';
-                            if (errorFunction) {
-                                errorFunction({'message' : me.errorMessage, 'details' : me.errorInfo});
-                            }
-                        });
-            return result;
+            const body = new URLSearchParams();
+            for (let key in serviceRequest) {
+                body.append(key, serviceRequest[key]);
+            }
+
+            let fetchPromise = fetch(url, {
+                method: requestMethod,
+                body: body,
+                cache: 'no-cache'
+            })
+            .then(async (response) => {
+                if (!response.ok) {
+                    me.errorMessage = me.showExceptionMessage(response);
+                    me.errorInfo = await response.text();
+                    let errorResult = {'message' : me.errorMessage, 'details' : me.errorInfo};
+                    if (errorFunction) {
+                        errorFunction(errorResult);
+                    }
+                    throw errorResult;
+                }
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw { message: "Invalid JSON response from server", details: text };
+                    }
+                });
+            })
+            .then(serviceResponse => {
+                if (serviceResponse.debugInfo !== undefined) {
+                    me.handleServiceFailure(serviceResponse.debugInfo);
+                }
+                me.showServiceMessages(serviceResponse);
+                if (successFunction) {
+                    successFunction(serviceResponse);
+                }
+                return serviceResponse;
+            })
+            .catch(err => {
+                if (err && err.message && err.details) {
+                    throw err;
+                }
+                me.errorMessage = "Network error or unexpected response";
+                me.errorInfo = err ? err.toString() : '';
+                let errorResult = {'message' : me.errorMessage, 'details' : me.errorInfo};
+                if (errorFunction) {
+                    errorFunction(errorResult);
+                }
+                throw errorResult;
+            });
+
+            return this.wrapPromise(fetchPromise);
         };
 
         postForm = (serviceName: string, parameters: any = "",
                     files: any,
                     progressFunction?: (progress: any) => void,
                     successFunction?: (serviceResponse: IServiceResponse) => void,
-                    errorFunction?: (errorMessage: any) => void) : JQueryPromise<any> => {
+                    errorFunction?: (errorMessage: any) => void) : IServicePromise<any> => {
 
             // This method is typically used when one or more files must be uploaded as part of a service
             let me = this;
@@ -264,35 +319,53 @@ namespace Peanut {
 
             // todo: support progress function
 
-            let result =
-                jQuery.ajax({
-                    type: "POST",
-                    data: formData,
-                    dataType: "json",
-                    cache: false,
-                    url: Peanut.Config.values.serviceUrl,
-                    contentType: false,
-                    processData: false,
+            let fetchPromise = fetch(Peanut.Config.values.serviceUrl, {
+                method: 'POST',
+                body: formData,
+                cache: 'no-cache'
+            })
+            .then(async (response) => {
+                if (!response.ok) {
+                    me.errorMessage = me.showExceptionMessage(response);
+                    me.errorInfo = await response.text();
+                    let errorResult = {'message' : me.errorMessage, 'details' : me.errorInfo};
+                    if (errorFunction) {
+                        errorFunction(errorResult);
+                    }
+                    throw errorResult;
+                }
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw { message: "Invalid JSON response from server", details: text };
+                    }
+                });
+            })
+            .then(serviceResponse => {
+                if (serviceResponse.debugInfo !== undefined) {
+                    me.handleServiceFailure(serviceResponse.debugInfo);
+                }
+                me.showServiceMessages(serviceResponse);
+                if (successFunction) {
+                    successFunction(serviceResponse);
+                }
+                return serviceResponse;
+            })
+            .catch(err => {
+                if (err && err.message && err.details) {
+                    throw err;
+                }
+                me.errorMessage = "Network error or unexpected response";
+                me.errorInfo = err ? err.toString() : '';
+                let errorResult = {'message' : me.errorMessage, 'details' : me.errorInfo};
+                if (errorFunction) {
+                    errorFunction(errorResult);
+                }
+                throw errorResult;
+            });
 
-                })
-                    .done(
-                        function(serviceResponse) {
-                            me.showServiceMessages(serviceResponse);
-                            if (successFunction) {
-                                successFunction(serviceResponse);
-                            }
-                        }
-                    )
-                    .fail(
-                        function(jqXHR, textStatus ) {
-                            me.errorMessage = me.showExceptionMessage(jqXHR);
-                            me.errorInfo = (jqXHR) ? jqXHR.responseText : '';
-                            if (errorFunction) {
-                                errorFunction({'message' : me.errorMessage, 'details' : me.errorInfo});
-                            }
-                        });
-
-            return result;
+            return this.wrapPromise(fetchPromise);
         };
 
 
@@ -300,14 +373,14 @@ namespace Peanut {
         // Execute a peanut service and handle Service Response.
         executeService = (serviceName: string, parameters: any = "",
                           successFunction?: (serviceResponse: IServiceResponse) => void,
-                          errorFunction?: (errorMessage: string) => void) : JQueryPromise<any> => {
+                          errorFunction?: (errorMessage: string) => void) : IServicePromise<any> => {
             return this.executeRPC("POST", serviceName, parameters, successFunction, errorFunction);
         };
 
         // GET is no longer supported. This method is for backward compatibility but is identical to execute service
         getFromService = (serviceName: string, parameters: any = "",
                           successFunction?: (serviceResponse: IServiceResponse) => void,
-                          errorFunction?: (errorMessage: string) => void) : JQueryPromise<any> => {
+                          errorFunction?: (errorMessage: string) => void) : IServicePromise<any> => {
             return this.executeRPC("POST", serviceName, parameters, successFunction, errorFunction);
         };
 

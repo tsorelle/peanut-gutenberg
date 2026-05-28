@@ -10,21 +10,32 @@ namespace Tops\services;
 
 // use Concrete\Core\Http\Request;
 use Peanut\PeanutTasks\TaskManager;
-use Peanut\QnutDocuments\DocumentManager;
 use Peanut\sys\ViewModelPageBuilder;
-use Peanut\users\AccountManager;
-use Tops\services\DownloadServiceFactory;
-use Tops\services\ServiceFactory;
 use Tops\sys\IHttpRequest;
 use Tops\sys\TConfiguration;
+use Tops\sys\TObjectContainer;
+use Tops\sys\TPath;
 use Tops\sys\TUser;
 
 class ServiceRequestHandler
 {
     public function executeService()
     {
-        $response = ServiceFactory::Execute();
-        print json_encode($response);
+        header('Content-Type: application/json');
+        try {
+            $response = ServiceFactory::Execute();
+            echo json_encode($response);
+        }
+        catch (\Throwable $ex) {
+            $response = new TServiceErrorResponse();
+            $response->Result = ResultType::ServiceFailure;
+            $debugInfo = new \stdClass();
+            $debugInfo->message = $ex->getMessage();
+            $debugInfo->location = $ex->getFile().": Line ".$ex->getLine();
+            $debugInfo->trace = $ex->getTraceAsString();
+            $response->debugInfo = $debugInfo;
+            echo json_encode($response);
+        }
     }
 
     public function signout() {
@@ -51,7 +62,8 @@ class ServiceRequestHandler
     }
 
     public function getSettings() : void{
-        include(DIR_CONFIGURATION.'/settings.php');
+        $configPath = TPath::getConfigPath();
+        include($configPath.'/settings.php');
     }
 
     public function buildPage(IHttpRequest $request = null) : void  {
@@ -97,7 +109,15 @@ class ServiceRequestHandler
             $args[] = $arg5;
         }
 
-        DocumentManager::outputDocumentContent($args);
+        $documentManager = TObjectContainer::Get('qnut.documentmanager');
+        if ($documentManager) {
+            $documentManager->outputContent($args);
+        }
+        else {
+            exit ("Document manager not found");
+        }
+
+        // DocumentManager::outputDocumentContent($args);
 
     }
 

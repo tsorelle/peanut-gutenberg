@@ -45,7 +45,7 @@ class ServiceFactory extends TAbstractServiceFactory
         try {
             return parent::executeService();
         }
-        catch (\Exception $ex) {
+        catch (\Throwable $ex) {
             $debugInfo = new \stdClass();
 
             if (sys\TObjectContainer::HasDefinition('tops.errorLogger')) {
@@ -54,7 +54,7 @@ class ServiceFactory extends TAbstractServiceFactory
                     $logReference = $logger->log($ex);
                     $debugInfo->message = "See errorlog: $logReference";
                 }
-                catch (\Exception $logEx) {
+                catch (\Throwable $logEx) {
                     $debugInfo->message = 'Logging error: '.$ex->getMessage();
                 }
             }

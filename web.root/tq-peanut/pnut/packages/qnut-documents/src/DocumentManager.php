@@ -225,11 +225,7 @@ class DocumentManager
 
     private static $documentDir;
 
-    /**
-     * @param $args
-     */
-    public static function outputDocumentContent($args)
-    {
+    private function outputContent($args) {
         $argc = count($args);
         $download = false;
         if ($argc > 1 && strtolower($args[$argc - 1]) === 'download') {
@@ -266,6 +262,14 @@ class DocumentManager
         }
 
         self::openDocument($document,$download);
+    }
+
+    /**
+     * @param $args
+     */
+    public static function outputDocumentContent($args)
+    {
+        self::getInstance()->outputContent($args);
     }
 
     public static function getDocumentDir($folder='',$fileName='') {
