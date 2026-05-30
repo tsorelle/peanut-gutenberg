@@ -4,6 +4,7 @@ namespace Tops\cms\nutshell;
 
 use Tops\sys\IUser;
 use Tops\sys\TUser;
+use Tops\sys\TWebSite;
 
 class SiteMap
 {
@@ -279,7 +280,19 @@ class SiteMap
         foreach ($node->attributes() as $name => $value) {
             $item->{$name} = sprintf('%s', $value);
         }
+        if (isset($item->uri) && strpos($item->uri, '/') === 0) {
+            $item->uri = $this->expandUri($item->uri);
+        }
         return $item;
+    }
+
+    private static $baseUrl;
+    private function expandUri($uri)
+    {
+        if (!isset(self::$baseUrl)) {
+            self::$baseUrl = TWebSite::getBaseUrl();
+        }
+        return self::$baseUrl . $uri;
     }
 
 }

@@ -204,6 +204,7 @@ class TNullUser implements IUser {
     public function setPassword($newPassword)
     {
         // TODO: Implement setPassword() method.
+        return false;
     }
 
     public function getAccountPageUrl()

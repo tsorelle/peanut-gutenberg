@@ -133,3 +133,17 @@ function peanut_deactivation() {
 }
 // register_deactivation_hook(__FILE__, 'peanut_deactivation' );
 
+add_filter( 'wp_get_nav_menu_items', function( $items ) {
+    if ( is_user_logged_in() ) return $items;
+
+    foreach ( $items as $key => $item ) {
+        if ( $item->object === 'page' ) {
+            $page = get_post( $item->object_id );
+            if ( $page && $page->post_status === 'private' ) {
+                unset( $items[$key] );
+            }
+        }
+    }
+    return $items;
+});
+

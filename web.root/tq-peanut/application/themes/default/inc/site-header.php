@@ -1,11 +1,15 @@
 <header class="p-1 text-dark">
     <nav id="top-navbar" class="navbar navbar-expand-lg navbar-light bg-light"
          aria-label="Top navigation">
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-right: 10rem; padding-left: 10rem;">
             <a class="navbar-brand" href="/">
                 <?php
-                    printf('<img style="height:3rem" class="img img-fluid" src="%s/assets/img/peanut-logo-6.jpg">',
-                            URL_APPLICATION)
+                    // printf('<img style="height:3rem" class="img img-fluid" src="%s/assets/img/peanut-logo-6.jpg">',
+                       //     URL_APPLICATION)
+                // todo: get with code
+                $themeLogo = '/wp-content/themes/bootscore-child/assets/img/logo/logo.svg';
+                printf('<img style="height:2rem" class="img img-fluid" src="%s">', $themeLogo);
+
                 ?>
 
             </a>
@@ -16,7 +20,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="nutshell-top-navigation-menu">
-                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
 
 
                 <?php
@@ -25,7 +29,7 @@
                 ?>
 
                 </ul>
-
+<!--
                 <form id="song-search" method="post" action="/songs" >
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search" autocomplete="off"
@@ -33,6 +37,8 @@
                         <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
+             -->
+
             </div>
         </div>
     </nav>

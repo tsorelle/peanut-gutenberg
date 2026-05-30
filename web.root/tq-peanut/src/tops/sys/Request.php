@@ -35,7 +35,8 @@ class Request
         $result->requestMethod =  $_SERVER['REQUEST_METHOD'];
         $result->scriptName = $_SERVER['SCRIPT_NAME'];
         $result->requestScheme = $_SERVER['REQUEST_SCHEME'];
-        $format = array_shift(explode(',',$_SERVER['HTTP_ACCEPT']));
+        $array = explode(',', $_SERVER['HTTP_ACCEPT']);
+        $format = array_shift($array);
         $result->requestFormat = array_pop(explode('/',$format));
 
         foreach ($_POST as $key => $value) {

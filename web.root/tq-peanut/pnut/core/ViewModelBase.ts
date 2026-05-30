@@ -86,7 +86,7 @@ namespace Peanut {
         protected services: ServiceBroker;
         protected application: IPeanutClient;
         protected translations: string[] = [];
-        public bootstrapVersion = ko.observable(3);
+        public bootstrapVersion = ko.observable(5);
         public fontSet = ko.observable('');
 
         public deviceSize = ko.observable(4);
@@ -162,7 +162,10 @@ namespace Peanut {
             me.services = ServiceBroker.getInstance(application);
             PeanutLoader.loadUiHelper(() => {
 
+                let helper =Peanut.ui.helper;
+                let fw = Peanut.ui.helper.getFramework();
                 if (Peanut.ui.helper.getFramework() === 'Bootstrap') {
+                    let ver =Peanut.ui.helper.getVersion();
                     me.bootstrapVersion(Peanut.ui.helper.getVersion());
                     me.fontSet(Peanut.ui.helper.getFontSet());
                 }

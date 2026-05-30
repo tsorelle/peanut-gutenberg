@@ -45,4 +45,8 @@ class TNullUserFactory implements IUserFactory {
         );
     }
 
+    public function createAccountManager()
+    {
+        // TODO: Implement createAccountManager() method.
+    }
 }

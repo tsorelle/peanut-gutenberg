@@ -55,7 +55,8 @@ if ($embed===1) {
         }
 
     /** @noinspection HtmlUnknownTarget */
-        printf('<link rel="stylesheet" type="text/css" href="%s/styles.css"/>',$themePath ?? 'Error missing theme path');
+        print Peanut\sys\CssManager::getStyleSheets($themePath ?? null);
+        // printf('<link rel="stylesheet" type="text/css" href="%s/styles.css"/>',$themePath ?? 'Error missing theme path');
         if (isset($extraStyles)) {
             /** @noinspection HtmlUnknownTarget */
             printf('<link rel="stylesheet" type="text/css" href="%s/extra.css%s"/>',

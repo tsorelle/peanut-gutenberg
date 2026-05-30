@@ -17,6 +17,8 @@ namespace Peanut {
 
         // call this funtions at end of page
         init(successFunction?: () => void) {
+            let ver = this.bootstrapVersion();
+            this.bootstrapVersion(5);
             console.log('Init ModalTest');
             let me = this;
             me.application.registerComponents(['@pnut/modal-confirm'], () => {

@@ -1,7 +1,7 @@
 // required for all view models:
 /// <reference path='../../../../pnut/core/ViewModelBase.ts' />
 /// <reference path='../../../../typings/knockout/index.d.ts' />
-///<reference path="../../../assets/js/TestLib.ts"/>
+///<reference path="../../../assets/js/TestLib.js"/>
 
 // Module
 namespace Peanut {
