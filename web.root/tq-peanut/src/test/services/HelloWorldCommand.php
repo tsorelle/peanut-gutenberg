@@ -12,7 +12,7 @@ namespace PeanutTest\services;
 use PHPUnit\Runner\Exception;
 use Tops\sys\TLanguage;
 
-class helloWorldCommand extends \Tops\services\TServiceCommand
+class HelloWorldCommand extends \Tops\services\TServiceCommand
 {
     protected function run()
     {
