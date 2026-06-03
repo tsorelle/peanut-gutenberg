@@ -31,8 +31,7 @@ function peanut_initialize() {
             return;
         }
     }
-    $peanutSystemLocation = 'docroot';
-    // $peanutSystemLocation = 'module';
+    $peanutSystemLocation = 'docroot';// $peanutSystemLocation = 'module';
 
     $peanutRoot = $peanutSystemLocation == 'docroot' ?
         $_SERVER['DOCUMENT_ROOT'] :
@@ -41,8 +40,17 @@ function peanut_initialize() {
     require_once  "$peanutRoot/tq-peanut/bootstrap/definitions.php";
     require_once DIR_APPLICATION . '/config/peanut-bootstrap.php';
 
-    $bootResponse  = \Peanut\Bootstrap::initialize();
-    // \Tops\sys\TTracer::Start();
+    \Peanut\Bootstrap::initialize();
+    if (!class_exists('Tops\sys\TTracer')) {
+        exit ("Tracer not loaded");
+    }
+    $tracerOn = false;
+   // $tracerOn = true;
+    if ($tracerOn) {
+        \Tops\sys\TTracer::Start();
+        \Tops\sys\TTracer::Print('Tracer started');
+    }
+
     session_start();
     \Tops\sys\TSession::Initialize();
     if (!class_exists('Tops\cms\TRouteFinder')) {

@@ -52,15 +52,13 @@ class TTracer
     public static function Print($message,$arr=null): void
     {
         if (self::$enabled) {
-
-
-        print "<pre>\n";
-        print("$message\n");
-        if ($arr) {
-            print_r($arr);
-        }
-        print "</pre>\n";
-        }
+            print "<pre>\n";
+            print("$message\n");
+            if ($arr) {
+                print_r($arr);
+            }
+            print "</pre>\n";
+            }
     }
 
 }
