@@ -1,6 +1,6 @@
 {
     "name": "twoquakers/peanut-gutenberg",
-    "description": "Peanut Framework Adapted for Wordpress 6",
+    "description": "Peanut Framework Adapted for Wordpress 6+",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "license": "GPL-3.0+",

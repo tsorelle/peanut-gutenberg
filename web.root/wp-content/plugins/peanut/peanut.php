@@ -19,6 +19,7 @@ use Peanut\sys\ViewModelManager;
 
 add_action( 'init', 'peanut_initialize' );
 function peanut_initialize() {
+
     if (!empty($_SERVER['REQUEST_URI'])) {
         $reqExtension = strtolower( pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION));
         $p = strpos($reqExtension, '?');
@@ -39,8 +40,9 @@ function peanut_initialize() {
 
     require_once  "$peanutRoot/tq-peanut/bootstrap/definitions.php";
     require_once DIR_APPLICATION . '/config/peanut-bootstrap.php';
-    $bootResponse  = \Peanut\Bootstrap::initialize();
 
+    $bootResponse  = \Peanut\Bootstrap::initialize();
+    // \Tops\sys\TTracer::Start();
     session_start();
     \Tops\sys\TSession::Initialize();
     if (!class_exists('Tops\cms\TRouteFinder')) {
@@ -51,6 +53,7 @@ function peanut_initialize() {
         $uri = preg_replace("/(^\/)|(\/$)/", "", $_SERVER['REQUEST_URI']);
         // $matched = TRouteFinder::matchWithRedirect($uri);
         $matched = TRouteFinder::match($uri);
+        \Tops\sys\TTracer::Print( "Matched route: $uri");
         if ($matched) { // \Nutshell\cms\RouteFinder::match($uri)) {
             TRouter::Execute();
             exit;
@@ -84,7 +87,6 @@ function peanut_scripts() {
 
 }
 
-
 add_action('wp_footer', 'render_peanut_start_script', 999);
 
 function render_peanut_start_script() {
@@ -103,6 +105,8 @@ function render_peanut_start_script() {
 
     wp_enqueue_script('peanut-loader-js', "/tq-peanut/pnut/core/$loaderScript",
         ['peanut-head-load-js'], $peanutVersion, true);*/
+
+    \Tops\sys\TTracer::Print("Rendering peanut start script");
     if (\Peanut\sys\ViewModelManager::hasVm()) {
         // todo: render script tags here for peanut loader/head.js?
         \Peanut\sys\ViewModelManager::RenderStartScript();

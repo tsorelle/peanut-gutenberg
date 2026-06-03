@@ -8,6 +8,7 @@ use Tops\cms\TRouter;
 use Tops\sys\TConfiguration;
 use Tops\sys\TPath;
 use Tops\sys\TSession;
+use Tops\sys\TTracer;
 use Tops\sys\TUser;
 
 class NutshellRouter extends TRouter
@@ -34,6 +35,7 @@ class NutshellRouter extends TRouter
                 inputvalue
         */
 
+        // print "<p>Routing page</p>";
         $routeData = TRouteFinder::$matched;
         $uri = $routeData['uri'];
         $user = TUser::getCurrent();
@@ -52,6 +54,7 @@ class NutshellRouter extends TRouter
             $user->getFullName().' | '.'<a class="ms-2" href="/signout">Sign Out</a>' :
             '<a id="footer-signin-link" href="/signin">Sign in</a>';
 
+        TTracer::Print ("Routing page to theme $theme.");
         if ($theme === 'plain') {
             $routeData['bscdn'] = 1;
             $routeData['maincolsize'] = 12;
@@ -88,8 +91,10 @@ class NutshellRouter extends TRouter
             $routeData['maincolsize'] = $maincolsize;
         }
 
+
         if (isset($routeData['view'])) {
             $view = DIR_APPLICATION . '/content/pages/' . $routeData['view'] . '.php';
+            // print "<p>Routing page to view $view</p>";
         } else if (isset($routeData['mvvm'])) {
             $viewModelKey = $routeData['mvvm'];
             if (TConfiguration::getBoolean('optimize','peanut',false)) {
@@ -99,10 +104,12 @@ class NutshellRouter extends TRouter
                 $routeData['loaderScript'] = 'PeanutLoader.js';
             }
             $vmInfo = ViewModelManager::getViewModelSettings($viewModelKey);
-
+            TTracer::Print('View model info:',$vmInfo);
             if (empty($vmInfo)) {
                 $errorMessage = "Error: Cannot find view model configuration for '$viewModelKey'</h2>";
+                print "<p>ViewModel configuration not found for '$viewModelKey'</p>";
             } else {
+                TTracer::Print("ViewModel configuration found for '$viewModelKey'");
                 $viewResult = $vmInfo->view ?? null;
                 if ($viewResult == 'content') {
                     $errorMessage = 'Embedded views not supported in Nutshell';

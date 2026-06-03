@@ -14,6 +14,7 @@ use Tops\sys\TConfiguration;
 use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 use Tops\sys\TStrings;
+use Tops\sys\TTracer;
 use Tops\sys\TUser;
 use Tops\sys\TWebSite;
 
@@ -100,10 +101,13 @@ class ViewModelManager
             $packageDir = self::getPackageDir();
             self::$vmSettings = parse_ini_file(DIR_CONFIGURATION . '\viewmodels.ini', true);
             $packages = self::getPackageList();
+            TTracer::Print('Package list:',$packages);
+
             if (!empty($packages)) {
                 foreach ($packages as $package) {
                     $iniPath = $packageDir . "/$package/config/viewmodels.ini";
                     if (file_exists($iniPath)) {
+                        TTracer::Print("Loading view model settings from package '$package'");
                         $pkgini = parse_ini_file($packageDir . "/$package/config/viewmodels.ini", true);
                         if (!empty($pkgini)) {
                             $keys = array_keys($pkgini);
@@ -112,11 +116,12 @@ class ViewModelManager
                             }
                             self::$vmSettings = array_merge(self::$vmSettings, $pkgini);
                         }
+                        TTracer::Print("Merged view model settings from package '$package'");
                     }
                 }
             }
         }
-
+        TTracer::Print('Finished package load.');
         $key = strtolower($pathAlias);
         if (array_key_exists($key, self::$vmSettings)) {
             $item = self::$vmSettings[$key];

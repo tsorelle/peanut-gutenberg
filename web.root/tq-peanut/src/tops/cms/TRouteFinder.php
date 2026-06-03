@@ -2,6 +2,8 @@
 
 namespace Tops\cms;
 
+use Tops\sys\TTracer;
+
 class TRouteFinder
 {
     public static ?array $matched = null;
@@ -47,7 +49,9 @@ class TRouteFinder
         self::$routes = parse_ini_file(DIR_CONFIGURATION . '/routing.ini', true);
         foreach (self::$routes as $matchPath => $values) {
             if (str_starts_with($uri, $matchPath)) {
+                TTracer::Print("Match found for path: $matchPath");
                 if ($uri != $matchPath && (!array_key_exists('args',$values))) {
+                    // print("<br>Skipping non-argument match\n");
                     continue;
                 }
                 $matchParts = explode('/', $matchPath);
@@ -55,6 +59,7 @@ class TRouteFinder
                 $pathParts = explode('/', $uri);
                 for ($i = 0; $i < $matchCount; $i++) {
                     if ($pathParts[$i] !== $matchParts[$i]) {
+                        TTracer::Print("Path mismatch at index $i: Expected {$matchParts[$i]}, got {$pathParts[$i]}");
                         return false;
                     }
                 }
@@ -74,7 +79,7 @@ class TRouteFinder
                 $configuration['path'] = $matchPath;
                 $configuration['argValues'] = $argValues ?? [];
                 self::$matched = $configuration;
-
+                TTracer::Print("Match found for path: $matchPath",self::$matched);
                 return true;
             }
         }

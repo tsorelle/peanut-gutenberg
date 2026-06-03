@@ -80,7 +80,7 @@ class Bootstrap
                     $testPaths[] = 'Tops\concrete5\Concrete5AccountManager';
                     break;
                 case 'WordPress':
-                    $testPaths[] = 'Tops\wordpress\TWordpressUser';
+                    $testPaths[] = 'Tops\cms\wordpress\WordpressUser';
                     break;
                 Case 'Nutshell' :
                     $testPaths[] = 'Nutshell\cms\SiteMap';
@@ -97,7 +97,8 @@ class Bootstrap
         }
         if (!empty($failed)) {
             $list = implode('; ',$failed);
-            throw new \Exception('Failed to load test paths: '.$list);
+            exit('Failed to load test paths: '.$list);
+            // throw new \Exception('Failed to load test paths: '.$list);
         }
     }
 
@@ -146,6 +147,7 @@ class Bootstrap
         if (!str_ends_with($fileRoot,'/')) {
             $fileRoot .= '/';
         }
+
 
         $composerPath =  TConfiguration::getValue('composer','locations','../vendor');
         $vendorAutoloadFile = DIR_ROOT.'/'.$composerPath.'/autoload.php';
@@ -200,6 +202,7 @@ class Bootstrap
         $response->optimize = (
             TConfiguration::getValue('optimize','peanut',0)) == 1;
         $response->loader = $loader;
+        self::testAutoload();
         return $response;
     }
 

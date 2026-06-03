@@ -211,6 +211,7 @@ class TWebSite
             'HTTP_X_REAL_IP',        // Nginx
             'REMOTE_ADDR'            // Always present
         ];
+
         foreach ($keys as $key) {
             if (!empty($_SERVER[$key])) {
                 $ip = $_SERVER[$key];
@@ -225,4 +226,5 @@ class TWebSite
         }
         return '';
     }
+
 }
