@@ -48,11 +48,22 @@ function peanut_initialize() {
    // $tracerOn = true;
     if ($tracerOn) {
         \Tops\sys\TTracer::Start();
-        \Tops\sys\TTracer::Print('Tracer started');
     }
 
-    session_start();
+    // don't start session here, WP doesn't like it.
+    /**
+    $status = session_status();
+    if ($status == PHP_SESSION_NONE) {
+         session_start();
+    }
+     */
+
     \Tops\sys\TSession::Initialize();
+
+    \Tops\sys\TTracer::Print(
+        class_exists('PeanutTest\services\HelloWorldCommand') ?
+        'Found test service' : 'NO TEST SERVICE');
+
     if (!class_exists('Tops\cms\TRouteFinder')) {
         throw new \Exception('Initialization failed');
     };
