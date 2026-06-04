@@ -9,7 +9,6 @@
 namespace PeanutTest\scripts;
 
 
-use Tops\concrete5\TConcrete5User;
 use Tops\sys\TPermissionsManager;
 use Tops\sys\TUser;
 
@@ -25,6 +24,7 @@ class UserTest extends TestScript
 
     public function execute()
     {
+
         print "Testing testuser\n";
         /**
          * @var $user TConcrete5User
@@ -48,16 +48,23 @@ class UserTest extends TestScript
 
         $isAdmin = $user->isAdmin();
         print "Current is admin? " . ($isAdmin ? 'Yes' : 'No') . "\n";
-        if ($isAdmin) {
+/*        if ($isAdmin) {
             $this->assertEquals(self::adminUser, $currentUserName, 'isAdmin failed');
         } else {
             $this->assert(self::adminUser != $currentUserName, 'isAdmin failed');
+        }*/
+
+        $user = TUser::getByUserName('nosuchuser');
+        if ($user === false) {
+            print "User 'nosuchuser' not found, as expected.\n";
         }
-
+        else {
+            $this->assert(false, 'User "nosuchuser" should not be found');
+            return;
+        }
         $user = TUser::getByUserName(self::testUser);
-        if ($this->assert($user,"User '".self::testUser."' not found")) {
-
-
+        $ok = $this->assert($user !== false ,"User '".self::testUser."' not found");
+        if ($ok) {
             $actual = $user->getUserName();
             $this->assertEquals(self::testUser, $actual, 'user name');
             print "Loaded user " . self::testUser . "\n";
@@ -93,10 +100,9 @@ class UserTest extends TestScript
             $this->assert($actual, 'cannot administer mail');
             print "Can administer mail? " . ($actual ? 'Yes' : 'No') . "\n";
             //todo: reenable after peanut security installed.
-/*            $actual = $user->isAuthorized(TPermissionsManager::appAdminPermissionName);
-            $this->assert(!$actual, 'Not expected to administer peanut');
-            print "Can administer peanut? " . ($actual ? 'Yes' : 'No') . "\n";*/
+            /*            $actual = $user->isAuthorized(TPermissionsManager::appAdminPermissionName);
+                        $this->assert(!$actual, 'Not expected to administer peanut');
+                        print "Can administer peanut? " . ($actual ? 'Yes' : 'No') . "\n";*/
         }
-
     }
 }

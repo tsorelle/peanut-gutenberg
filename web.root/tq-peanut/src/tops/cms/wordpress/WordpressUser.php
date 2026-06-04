@@ -89,7 +89,9 @@ class WordpressUser extends TAbstractUser
     public function loadByUserName($userName)
     {
          $user = get_user_by('login',$userName);
-         $this->setUser($user);
+         if ($user !== false) {
+             $this->setUser($user);
+         }
          return $user;
     }
 

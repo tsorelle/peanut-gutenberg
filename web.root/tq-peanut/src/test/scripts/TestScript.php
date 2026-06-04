@@ -45,7 +45,9 @@ abstract class TestScript
      }
 
     protected function authorized() {
-         return true;
+         if (TWebSite::IsLocalHost()) {
+             return true;
+         }
          return TUser::getCurrent()->isAdmin();
     }
 

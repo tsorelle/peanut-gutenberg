@@ -166,7 +166,7 @@ class TWebSite
             return $result;
         }
         $domain = strtolower(self::GetDomain());
-        if ($domain == 'localhost' || starts_with($domain,'local.')) {
+        if ($domain == 'localhost' || str_starts_with($domain,'local.')) {
             return 'local';
         }
         $parts = explode('.',$domain);
