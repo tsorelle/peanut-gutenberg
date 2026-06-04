@@ -86,7 +86,22 @@ function peanut_initialize() {
 }
 
 
-// todo: move to scriptloading render
+function peanut_enqueue_styles() {
+    if ( is_user_logged_in()) {
+        // authenticated
+        $peanutVersion = ViewModelManager::GetPeanutVersion();
+        wp_enqueue_style(
+            'my-plugin-style',                          // Unique handle
+            plugin_dir_url(__FILE__) . 'css/peanut-authenticated.css', // URL to the file
+            [],                                          // Dependencies (other handles)
+            $peanutVersion,                                     // Version number
+            'all'                                        // Media type
+        );
+    }
+}
+
+add_action('wp_enqueue_scripts', 'peanut_enqueue_styles');
+
 add_action( 'wp_enqueue_scripts', 'peanut_scripts' );
 function peanut_scripts() {
     $peanutVersion = ViewModelManager::GetPeanutVersion();
