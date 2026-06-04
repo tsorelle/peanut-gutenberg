@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/web.root/tq-peanut/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/web.root/tq-peanut/src/test" isTestSource="true" packagePrefix="PeanutTest" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/clue/stream-filter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mailgun/mailgun-php" />

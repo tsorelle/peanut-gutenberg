@@ -67,6 +67,8 @@ class Bootstrap
         $testPaths = array_merge($testPaths,  [
             'Tops\sys\TUser',
             'Peanut\sys\TVmContext',
+            'Tops\cms\wordpress\db\entity\PeanutBlock',
+            'Tops\cms\wordpress\db\repository\PeanutBlocksRepository',
             'Peanut\PeanutPermissions\services\GetPermissionsCommand'
         ]);
         $testPaths = array_merge($testPaths,
