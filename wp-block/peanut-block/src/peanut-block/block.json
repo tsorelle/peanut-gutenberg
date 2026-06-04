@@ -26,6 +26,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"vmcontext": {
+			"type": "string",
+			"default": ""
+		},
 		"debugMode": {
 			"type": "boolean",
 			"default": false

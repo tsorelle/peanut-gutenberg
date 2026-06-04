@@ -1,1 +1,1 @@
-console.log("Hello World! (from peanut-block-peanut-block block)");
+console.log("Loaded Peanut ViewModel Block");
