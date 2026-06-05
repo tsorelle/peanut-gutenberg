@@ -7,7 +7,8 @@
                     // printf('<img style="height:3rem" class="img img-fluid" src="%s/assets/img/peanut-logo-6.jpg">',
                        //     URL_APPLICATION)
                 // todo: get with code
-                $themeLogo = '/wp-content/themes/bootscore-child/assets/img/logo/logo.svg';
+                $themeLogo = '/wp-content/themes/bootscore-child/assets/img/logo/peanut-logo-small.jpg';
+
                 printf('<img style="height:2rem" class="img img-fluid" src="%s">', $themeLogo);
 
                 ?>
