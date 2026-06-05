@@ -39,6 +39,11 @@ namespace PeanutPermissions {
             changed: ko.observable(false)
         };
 
+        newRoleForm = {
+            roleName: ko.observable(''),
+            errorMessage: ko.observable('')
+        }
+
         waitLabelGetPermissions = 'Getting permissions';
         waitLabelUpdatePermissions = 'Updating permissions';
 
@@ -46,7 +51,7 @@ namespace PeanutPermissions {
             let me = this;
             Peanut.logger.write('VM Init');
             me.application.loadResources([
-                '@lib:lodash'
+                '@pnut/ViewModelHelpers.js'
             ], () => {
                 me.getPermissions(() => {
                     me.bindDefaultSection();
@@ -146,6 +151,37 @@ namespace PeanutPermissions {
             });
             me.permissionForm.changed(true);
         };
+
+        addNewRole = () => {
+            // this.hideModal('permission-modal')
+            this.newRoleForm.roleName('');
+            this.newRoleForm.errorMessage('');
+            this.showModal('new-role-modal')
+        }
+
+        doAddNewRole = () => {
+            const me = this;
+            const request = this.newRoleForm.roleName().trim();
+            if (request.length === 0) {
+                me.newRoleForm.errorMessage('Role name cannot be empty');
+                return;
+            }
+            me.hideModal('new-role-modal');
+            me.application.hideServiceMessages();
+            me.application.showWaiter('Adding role...');
+            // single statement example
+            me.services.executeService('peanut.peanut-permissions::AddRole',request,
+                function(serviceResponse: Peanut.IServiceResponse) {
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        me.roles = serviceResponse.Value;
+                        me.application.hideWaiter();
+                    }
+                }
+            ).fail(function () {
+                let trace = me.services.getErrorInformation();
+                me.application.hideWaiter();
+            });
+        }
 
 
 

@@ -47,3 +47,12 @@ add_filter('bootscore/class/header/navbar', 'bootscore_child_navbar_classes');
 function bootscore_child_navbar_classes($class) {
   return trim($class . ' navbar-light bg-light');
 }
+
+function change_logo_path($logo, $color) {
+    $d = get_stylesheet_directory_uri();
+    if ($color === 'theme-dark') {
+        return get_stylesheet_directory_uri() . '/assets/img/logo/peanut-logo-small.jpg';
+    }
+    return get_stylesheet_directory_uri() .  '/assets/img/logo/peanut-logo-small.jpg';
+}
+add_filter('bootscore/logo', 'change_logo_path', 10, 2);
