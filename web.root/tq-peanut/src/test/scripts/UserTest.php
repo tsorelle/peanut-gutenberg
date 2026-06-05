@@ -9,6 +9,7 @@
 namespace PeanutTest\scripts;
 
 
+use Tops\cms\wordpress\WordpressUser;
 use Tops\sys\TPermissionsManager;
 use Tops\sys\TUser;
 
@@ -27,7 +28,7 @@ class UserTest extends TestScript
 
         print "Testing testuser\n";
         /**
-         * @var $user TConcrete5User
+         * @var $user WordpressUser
          */
         $user = TUser::getCurrent();
 
