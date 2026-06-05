@@ -27,6 +27,10 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'vminput' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'vmcontext' => array(
 				'type' => 'string',
 				'default' => ''

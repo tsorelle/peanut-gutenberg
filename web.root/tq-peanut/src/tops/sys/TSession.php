@@ -46,7 +46,14 @@ class TSession
         }
 
         try {
-            setcookie('peanutSecurity', $_SESSION['tops']['security-token']);
+            $serverName = $_SERVER['SERVER_NAME'] ?? 'local.host';
+            $options = str_starts_with($serverName, 'local.') ? [] : [
+                'secure' => true,
+                // do not set, 'httponly' => true, javascript need access.
+               'samesite' => 'Strict',
+            ];
+            // $options = [];
+            setcookie('peanutSecurity', $_SESSION['tops']['security-token'],$options);
         } catch (\Exception $ex) {
             // probably in test environment.
             $_COOKIE['peanutSecurity'] = $_SESSION['tops']['security-token'];

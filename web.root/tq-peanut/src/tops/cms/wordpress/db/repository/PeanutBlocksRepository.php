@@ -29,6 +29,7 @@ class PeanutBlocksRepository extends \Tops\db\TEntityRepository
     {
         return array(
         'id'=>PDO::PARAM_INT,
+        'postId'=>PDO::PARAM_INT,
         'blockId'=>PDO::PARAM_STR,
         'viewModel'=>PDO::PARAM_STR,
         'inputValue'=>PDO::PARAM_STR);
@@ -41,17 +42,52 @@ class PeanutBlocksRepository extends \Tops\db\TEntityRepository
         return $stmt->rowCount() > 0;
     }
 
-    public function updateBlock($blockId,$viewModel,$inputValue='')
+    public function removeOrphanBlocks($postId,$blockIdList = [])
     {
-        $this->removeBlock($blockId);
-        $block = new PeanutBlock();
-        $block->blockId = $blockId;
-        $block->viewModel = $viewModel;
-        $block->inputValue = $inputValue;
-        $block->id = $this->insert($block);
+        if (empty($blockIdList)) {
+            $sql = 'DELETE FROM ' . $this->getTableName() . ' WHERE postId = ?';
+            $stmt = $this->executeStatement($sql, [$postId]);
+            return;
+        }
+        $list = '('. implode("','",$blockIdList).')';
+        $sql = 'DELETE FROM ' . $this->getTableName() .
+            ' WHERE postId = ? AND blockId NOT IN '.$list;
+        $stmt = $this->executeStatement($sql, [$postId]);
+    }
+
+    public function updateBlock($postId,$blockId,$viewModel,$inputValue='')
+    {
+        $block = $this->getByBlockId($blockId);
+        if ($block) {
+            if (($block->inputValue == $inputValue) && ($block->viewModel == $viewModel) && ($block->postId == $postId)) {
+                return false;
+            }
+            $block->postId = $postId;
+            $block->viewModel = $viewModel;
+            $block->inputValue = $inputValue;
+            $this->update($block);
+        }
+        else {
+            $block = new PeanutBlock();
+            $block->postId = $postId;
+            $block->blockId = $blockId;
+            $block->viewModel = $viewModel;
+            $block->inputValue = $inputValue;
+            $this->insert($block);
+        }
         return $block;
     }
 
+    public function getByBlockId($blockId) : ?PeanutBlock
+    {
+        $sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE blockId = ?';
+        $stmt = $this->executeStatement($sql,[$blockId]);
+        $result = $stmt->fetchObject($this->getClassName());
+        if (empty($result)) {
+            return false;
+        }
+        return $result;
+    }
     public function getBlock($blockId)
     {
         $sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE blockId = ?';

@@ -147,6 +147,38 @@ function render_peanut_start_script() {
     }
 }
 
+add_action('save_post', 'peanut_save_block', 10, 2);
+function peanut_save_block($post_id, $post) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    $status = $post->post_status ?? null;
+    if (in_array($status, ['inherit', 'auto-draft'])) return;
+
+    $repository = new \Tops\cms\wordpress\db\repository\PeanutBlocksRepository();
+    $peanutBlocks = [];
+
+    if ($status !== 'trash') {
+        $blocks = parse_blocks($post->post_content);
+        foreach ($blocks as $block) {
+            $name = $block['blockName'] ?? null;
+            if ($name === 'peanut-block/peanut-block') {
+                $attrs = $block['attrs']  ?? null;
+                $blockId = $attrs['vmcontext'] ?? null;
+                if (!empty($blockId)) {
+                    $peanutBlocks[] = $blockId;
+                    $viewModel = $attrs['viewmodel'] ?? '';
+                    $input =  $attrs['vminput'] ?? '';
+                    $repository->updateBlock($post_id,$blockId, $viewModel, $input);
+                }
+            }
+        }
+    }
+
+    $repository->removeOrphanBlocks($post_id, $peanutBlocks);
+
+}
+
 // todo: see if this is still needed, if so add from legacy project
 // add_filter('the_content','peanut_content');
 // function peanut_content($input)

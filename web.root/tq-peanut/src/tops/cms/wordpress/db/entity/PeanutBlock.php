@@ -12,4 +12,5 @@ class PeanutBlock  extends \Tops\db\TAbstractEntity
     public $blockId;
     public $viewModel;
     public $inputValue;
+    public $postId;
 }

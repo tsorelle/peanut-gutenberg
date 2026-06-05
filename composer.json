@@ -30,5 +30,13 @@
     },
     "require-dev": {
         "phpcompatibility/php-compatibility": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tops\\": "web.root/tq-peanut/src/tops/",
+            "Peanut\\": "web.root/tq-peanut/src/peanut/",
+            "Application\\": "web.root/tq-peanut/application/src/",
+            "PeanutTest\\": "web.root/tq-peanut/src/test/"
+        }
     }
 }

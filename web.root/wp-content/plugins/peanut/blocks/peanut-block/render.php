@@ -20,6 +20,7 @@ else
 	$debugMode = $attributes['debugMode'] ?? false;
 	$vmCode = $attributes['viewmodel'];
 	$vmContext = $attributes['vmcontext'] ?? null;
+	$vmInput = $attributes['vminput'] ?? null;
 	$vmSettings = \Peanut\sys\ViewModelManager::getViewModelSettings(
 		$vmCode,
 		$vmContext
