@@ -29,3 +29,21 @@ function bootscore_child_enqueue_styles() {
   $modificated_CustomJS = date('YmdHi', filemtime(get_stylesheet_directory() . '/assets/js/custom.js'));
   wp_enqueue_script('custom-js', get_stylesheet_directory_uri() . '/assets/js/custom.js', array('jquery'), $modificated_CustomJS, false, true);
 }
+
+function bootscore_footer_login_link() {
+    if ( !is_user_logged_in() ) {
+        return '<a href="' . wp_login_url() . '">Sign in</a>';
+    }
+    return '';
+}
+add_shortcode('bootscore_signin', 'bootscore_footer_login_link');
+
+
+/**
+ * Navbar classes
+ * Adds navbar-light bg-light to the navbar
+ */
+add_filter('bootscore/class/header/navbar', 'bootscore_child_navbar_classes');
+function bootscore_child_navbar_classes($class) {
+  return trim($class . ' navbar-light bg-light');
+}
