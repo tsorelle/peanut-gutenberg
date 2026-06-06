@@ -49,7 +49,7 @@ class PeanutBlocksRepository extends \Tops\db\TEntityRepository
             $stmt = $this->executeStatement($sql, [$postId]);
             return;
         }
-        $list = '('. implode("','",$blockIdList).')';
+        $list = "('". implode("','",$blockIdList)."')";
         $sql = 'DELETE FROM ' . $this->getTableName() .
             ' WHERE postId = ? AND blockId NOT IN '.$list;
         $stmt = $this->executeStatement($sql, [$postId]);
@@ -84,7 +84,7 @@ class PeanutBlocksRepository extends \Tops\db\TEntityRepository
         $stmt = $this->executeStatement($sql,[$blockId]);
         $result = $stmt->fetchObject($this->getClassName());
         if (empty($result)) {
-            return false;
+            return null;
         }
         return $result;
     }
