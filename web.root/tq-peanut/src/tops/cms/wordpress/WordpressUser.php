@@ -280,4 +280,11 @@ class WordpressUser extends TAbstractUser
         wp_set_current_user($user->ID);
         return true;
     }
+
+    public function signOut()
+    {
+        wp_logout();
+        // header('Location: /login');
+        // exit;
+    }
 }

@@ -125,7 +125,7 @@ class NutshellRouter extends TRouter
                         $return = $routeData['return'];
 
                         if ($return == 'referrer') {
-                            $return = $_SERVER['HTTP_REFERER'];
+                            $return = $_SERVER['HTTP_REFERER'] ?? null;
                         }
                         $_SESSION[AccountManager::redirectKey] = $return;
                         unset($routeData['return']);
@@ -188,8 +188,21 @@ class NutshellRouter extends TRouter
 
     }
 
-    function redirectToSignIn()
+    function redirectToSignIn($signInPage=null)
     {
-        // TODO: Implement redirectToSignIn() method.
+        if (!$signInPage) {
+            $signInPage = TConfiguration::getValue('signin', 'pages', '/signin');
+        }
+        if (!str_starts_with($signInPage, '/')) {
+            $signInPage = '/' . $signInPage;
+        }
+        $signInPage= '/signin';
+        $return = preg_replace("/(^\/)|(\/$)/", "", $_SERVER['REQUEST_URI']);
+        if (!str_starts_with($return, '/')) {
+            $return = '/' . $return;
+        }
+        $signInPage .= "?return=$return";// . urlencode($return);
+        header('Location: ' . $signInPage);
+        exit;
     }
 }

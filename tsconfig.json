@@ -4,7 +4,8 @@
     "target" : "ES6",
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "skipLibCheck": true
   },
   "include"  : [
 //      "web.root/**/*",

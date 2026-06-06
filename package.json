@@ -1,0 +1,14 @@
+{
+  "name": "peanut-gutenberg",
+  "version": "1.0.0",
+  "description": "Peanut for Wordpress with Gutenberg blocks",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/knockout": "3.4.77"
+  }
+}

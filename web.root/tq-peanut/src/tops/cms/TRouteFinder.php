@@ -64,10 +64,12 @@ class TRouteFinder
                     }
                 }
                 $handler = $values['handler'] ?? null;
-                if ($handler === 'redirect') {
+/*                if ($handler === 'redirect') {
                     $uri=  self::normalizeUri($values['target'] ?? '');
-                    continue;
-                }
+                    header('Location: '.$uri);
+                    exit;
+                    // continue;
+                }*/
                 $configuration = $values;
                 $pathCount = count($pathParts);
                 $argCount = $pathCount - $matchCount;

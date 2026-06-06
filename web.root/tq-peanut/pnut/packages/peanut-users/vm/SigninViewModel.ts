@@ -13,10 +13,13 @@ namespace PeanutUsers {
         redirectlink = ko.observable('/');
         failed = ko.observable(false);
         errormessage = ko.observable('');
+        redirect = '/';
 
         init(successFunction?: () => void) {
             let me = this;
             Peanut.logger.write('Signin Init');
+            const redirect = me.getRequestVar('return') || '/';
+            me.redirectlink(redirect);
             me.application.registerComponents('@pnut/change-password', () => {
                 me.bindDefaultSection();
                 successFunction();
@@ -41,6 +44,8 @@ namespace PeanutUsers {
                             me.status(response.status == 'failed' ? 'ready': response.status)
                             switch (response.status) {
                                 case 'ok':
+                                    window.location.replace('/');
+                                    window.location.href = me.redirectlink();
                                     me.redirectlink(response.redirectlink);
                                     me.userfullname(response.userfullname);
                                     break;

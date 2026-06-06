@@ -39,9 +39,9 @@ class ServiceRequestHandler
     }
 
     public function signout() {
-        $referrer = preg_replace("/(^\/)|(\/$)/","",$_SERVER['HTTP_REFERER']);
+        // $referrer = preg_replace("/(^\/)|(\/$)/","",$_SERVER['HTTP_REFERER']);
         TUser::SignOut();
-        header('Location: '.$referrer);
+        header('Location: /'); // .$referrer);
         exit();
     }
 

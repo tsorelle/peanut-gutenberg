@@ -107,7 +107,16 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,
   --#{$prefix}table-color: #{$body-color};
 }
 
+/** Peanut **/
+
 .navbar-brand img {
   height: 2rem; /* adjust to taste */
   width: auto;
+}
+
+#signin-form {
+  background-image: linear-gradient(#f2f2f2, #eee 50%, #dbdbdb);
+  filter: none;
+  border: 1px double black;
+  padding: 2rem;
 }
