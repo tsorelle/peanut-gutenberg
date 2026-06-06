@@ -9,6 +9,7 @@
 namespace PeanutTest\services;
 
 
+use Peanut\sys\TVmContext;
 use PHPUnit\Runner\Exception;
 use Tops\sys\TLanguage;
 
@@ -26,6 +27,11 @@ class HelloWorldCommand extends \Tops\services\TServiceCommand
             return;
         }
 
+        $contextId = $request->contextId ?? null;
+        $context = TVmContext::GetContext($contextId);
+        if (empty($context)) {
+            $this->addWarningMessage('Context not found.');
+        }
         // todo: infomessage not displayed
         $this->addInfoMessage('Hello World from: '.$request->tester);
         $responseValue = new \stdClass();

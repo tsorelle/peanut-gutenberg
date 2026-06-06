@@ -33,7 +33,7 @@ namespace Peanut {
             let me = this;
             let testerName = this.getPageVarialble('tester');
             me.showWaiter('Testing service');
-            let request = {"tester" : testerName};
+            let request = {"tester" : testerName, "contextId" : me.contextValue()};
             me.services.executeService('PeanutTest::HelloWorld', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {

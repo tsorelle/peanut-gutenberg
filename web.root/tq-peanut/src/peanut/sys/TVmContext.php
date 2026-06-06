@@ -68,8 +68,8 @@ abstract class TVmContext
 
             // join remainder in case default value contains literal ampersand
             $shared = implode('&',$parts);
-
             $blockData = $this->getBlockData($blockId);
+            $value = $blockData->value ?? '';
 
             // check for role based data
             //  e.g.  admin?specialvalue
