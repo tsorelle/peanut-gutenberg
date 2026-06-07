@@ -1,5 +1,5 @@
 <?php
-
+// error_log('child functions.php is running');
 /**
  * @package Bootscore Child
  *
@@ -8,6 +8,8 @@
 
 
 // Exit if accessed directly
+use Tops\sys\TUser;
+
 defined('ABSPATH') || exit;
 
 
@@ -31,20 +33,29 @@ function bootscore_child_enqueue_styles() {
 }
 
 function bootscore_footer_login_link() {
+
+    // error_log('bootscore_footer_login_link is running');
+
     if ( !is_user_logged_in() ) {
         return '<a href="' . wp_login_url() . '">Sign in</a>';
     }
-    return '';
+
+
+    if (class_exists('\Tops\sys\TUser')) {
+        return TUser::getCurrent()->getFullName() .' | <a href="'.wp_logout_url('/').'">Sign out</a>';
+    }
+
+    return 'Logged in as unknown user';
 }
 add_shortcode('bootscore_signin', 'bootscore_footer_login_link');
-
 
 /**
  * Navbar classes
  * Adds navbar-light bg-light to the navbar
  */
-add_filter('bootscore/class/header/navbar', 'bootscore_child_navbar_classes');
+add_filter('bootscore/class/header/navbar', 'bootscore_child_navbar_classes', 5);
 function bootscore_child_navbar_classes($class) {
+    // error_log('bootscore_child_navbar_classes is running');
   return trim($class . ' navbar-light bg-light');
 }
 
