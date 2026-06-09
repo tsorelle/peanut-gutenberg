@@ -13,9 +13,9 @@ License: GPLv2 or later
 Text Domain: peanut
 */
 
+use Peanut\sys\ViewModelManager;
 use Tops\cms\TRouteFinder;
 use Tops\cms\TRouter;
-use Peanut\sys\ViewModelManager;
 
 add_action( 'init', 'peanut_initialize' );
 function peanut_initialize() {
@@ -204,14 +204,23 @@ function peanut_deactivation() {
 // register_deactivation_hook(__FILE__, 'peanut_deactivation' );
 
 add_filter( 'wp_get_nav_menu_items', function( $items ) {
-    if ( is_user_logged_in() ) return $items;
+ //  \Tops\sys\TTracer::Start();
+    \Tops\sys\TTracer::Print('Menu items:',$items);
+    \Tops\sys\TTracer::Stop();
 
+    $authorizations = new \Peanut\PeanutPermissions\TAuthorizationPaths();
+    if ($authorizations->isAdmin) {
+        return $items;
+    }
     foreach ( $items as $key => $item ) {
         if ( $item->object === 'page' ) {
             $page = get_post( $item->object_id );
             if ( $page && $page->post_status === 'private' ) {
                 unset( $items[$key] );
             }
+        }
+        if (!$authorizations->isAuthorized($item->url)) {
+            unset($items[$key]);
         }
     }
     return $items;
