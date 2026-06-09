@@ -12,6 +12,11 @@ use Tops\sys\TUser;
 
 defined('ABSPATH') || exit;
 
+add_action('bootscore_before_title', function() {
+    if (!is_front_page()) {
+        echo do_blocks('<!-- wp:breadcrumbs /-->');
+    }
+});
 
 /**
  * Enqueue scripts and styles
