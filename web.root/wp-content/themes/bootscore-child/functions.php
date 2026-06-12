@@ -37,22 +37,42 @@ function bootscore_child_enqueue_styles() {
   wp_enqueue_script('custom-js', get_stylesheet_directory_uri() . '/assets/js/custom.js', array('jquery'), $modificated_CustomJS, false, true);
 }
 
+// Add shortcode [bootscore_signin] to widgets:footer 1
 function bootscore_footer_login_link() {
 
     // error_log('bootscore_footer_login_link is running');
+    $format =
+        '   <div class="justify-content-end"> '. // style="float: right"> '.
+        '       %s<a class="ms-2" href="%s">%s</a> </div>';
 
+    $userName = '';
+    $href = '';
+    $signText = '';
+
+    if (is_user_logged_in()) {
+        if (class_exists('\Tops\sys\TUser')) {
+            $userName = TUser::getCurrent()->getFullName() .' | ';
+        } else {
+            $userName = wp_get_current_user()->display_name .' | ';
+        }
+        $href = wp_logout_url('/');
+        $signText = 'Sign out';
+    }
     if ( !is_user_logged_in() ) {
-        return '<a href="' . wp_login_url() . '">Sign in</a>';
+        $href = wp_login_url();
+        $signText = 'Sign in';
     }
-
-
-    if (class_exists('\Tops\sys\TUser')) {
-        return TUser::getCurrent()->getFullName() .' | <a href="'.wp_logout_url('/').'">Sign out</a>';
-    }
-
-    return 'Logged in as unknown user';
+    return sprintf($format, $userName, $href, $signText);
 }
 add_shortcode('bootscore_signin', 'bootscore_footer_login_link');
+
+// Add shortcode [bootscore_contact] to widgets:footer 4
+function bootscore_footer_contact_link() {
+    return '<div class="justify-content-start"><a href="/contact">Contact us</a> </div>';
+}
+add_shortcode('bootscore_contact', 'bootscore_footer_contact_link');
+
+
 
 /**
  * Navbar classes
