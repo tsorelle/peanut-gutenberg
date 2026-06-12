@@ -22,7 +22,7 @@ use Tops\sys\TUser;
 
 add_action( 'init', 'peanut_initialize' );
 function peanut_initialize() {
-
+    $traceEnabled = class_exists('Tops\sys\TTracer');
     if (!empty($_SERVER['REQUEST_URI'])) {
         $reqExtension = strtolower( pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION));
         $p = strpos($reqExtension, '?');
@@ -47,6 +47,7 @@ function peanut_initialize() {
     if (!class_exists('Tops\sys\TTracer')) {
         exit ("Tracer not loaded");
     }
+    $traceEnabled = true;
     $tracerOn = false;
    // $tracerOn = true;
     if ($tracerOn) {
@@ -62,10 +63,6 @@ function peanut_initialize() {
      */
 
    \Tops\sys\TSession::Initialize();
-
-    \Tops\sys\TTracer::Print(
-        class_exists('PeanutTest\services\HelloWorldCommand') ?
-        'Found test service' : 'NO TEST SERVICE');
 
     if (!class_exists('Tops\cms\TRouteFinder')) {
         throw new \Exception('Initialization failed');
@@ -234,10 +231,10 @@ function peanut_deactivation() {
 // register_deactivation_hook(__FILE__, 'peanut_deactivation' );
 
 add_filter( 'wp_get_nav_menu_items', function( $items ) {
- //  \Tops\sys\TTracer::Start();
-    \Tops\sys\TTracer::Print('Menu items:',$items);
-    \Tops\sys\TTracer::Stop();
-
+    if (!class_exists('Tops\cms\TRouteFinder')) {
+        // sometimes (e.g. customizer page) this tries to run before peanut is initialized
+        return [];
+    }
     $authorizations = TAuthorizationPaths::GetInstance();
     if ($authorizations->isAdmin) {
         return $items;
