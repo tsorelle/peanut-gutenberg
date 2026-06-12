@@ -38,12 +38,11 @@ function bootscore_child_enqueue_styles() {
 }
 
 // Add shortcode [bootscore_signin] to widgets:footer 1
-function bootscore_footer_login_link() {
+function peanut_footer_login_link() {
 
     // error_log('bootscore_footer_login_link is running');
     $format =
-        '   <div class="justify-content-end"> '. // style="float: right"> '.
-        '       %s<a class="ms-2" href="%s">%s</a> </div>';
+        '<div class="justify-content-end">%s<a class="ms-2" href="%s">%s</a> </div>';
 
     $userName = '';
     $href = '';
@@ -64,15 +63,13 @@ function bootscore_footer_login_link() {
     }
     return sprintf($format, $userName, $href, $signText);
 }
-add_shortcode('bootscore_signin', 'bootscore_footer_login_link');
+add_shortcode('peanut_signin_link', 'peanut_footer_login_link');
 
 // Add shortcode [bootscore_contact] to widgets:footer 4
-function bootscore_footer_contact_link() {
+function peanut_footer_contact_link() {
     return '<div class="justify-content-start"><a href="/contact">Contact us</a> </div>';
 }
-add_shortcode('bootscore_contact', 'bootscore_footer_contact_link');
-
-
+add_shortcode('peanut_contact_link', 'peanut_footer_contact_link');
 
 /**
  * Navbar classes
