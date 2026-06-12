@@ -15,13 +15,14 @@ class AccessPathsRepository extends \Tops\db\TEntityRepository
     }
 
     public function getAccessPathRoles() {
-        $sql = 'SELECT p.`uri`,r.`roleName` FROM gutn_accesspaths p JOIN gutn_accessroles r ON r.`pathId` = p.id ORDER BY uri';
-
+        $sql = 'SELECT p.`uri`,r.`roleName` FROM pnut_accesspaths p JOIN pnut_accessroles r ON r.`pathId` = p.id ORDER BY uri';
         $stmt = $this->executeStatement($sql) ;
         return $stmt->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_COLUMN);
     }
+
+
     public function getAccessPaths() {
-        $sql = 'SELECT p.id, p.`uri` FROM gutn_accesspaths p ORDER BY uri';
+        $sql = 'SELECT p.id, p.`uri` FROM pnut_accesspaths p ORDER BY uri';
         $stmt = $this->executeStatement($sql) ;
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
@@ -30,7 +31,7 @@ class AccessPathsRepository extends \Tops\db\TEntityRepository
     {
         $pathObj = $this->getSingleEntity('uri = ?',[$path]);
         if ($pathObj) {
-            $sql = 'DELETE from gutn_accessroles WHERE pathId = ?';
+            $sql = 'DELETE from pnut_accessroles WHERE pathId = ?';
             $stmt = $this->executeStatement($sql,[$pathObj->id]);
             $this->delete($pathObj->id);
         }
@@ -39,7 +40,7 @@ class AccessPathsRepository extends \Tops\db\TEntityRepository
         $pathId = 0;
         $pathObj = $this->getSingleEntity('uri = ?',[$path]);
         if ($pathObj) {
-            $sql = 'DELETE from gutn_accessroles WHERE pathId = ?';
+            $sql = 'DELETE from pnut_accessroles WHERE pathId = ?';
             $stmt = $this->executeStatement($sql,[$pathObj->id]);
             $pathId = $pathObj->id;
         }
@@ -50,7 +51,7 @@ class AccessPathsRepository extends \Tops\db\TEntityRepository
         }
 
         foreach ($roleNames as $role) {
-            $sql = 'INSERT INTO gutn_accessroles (pathId,roleName) VALUES (?,?)';
+            $sql = 'INSERT INTO pnut_accessroles (pathId,roleName) VALUES (?,?)';
             $stmt = $this->executeStatement($sql,[$pathId,$role]);
         }
     }
@@ -69,6 +70,6 @@ class AccessPathsRepository extends \Tops\db\TEntityRepository
 
     protected function getTableName()
     {
-        return 'gutn_accesspaths';
+        return 'pnut_accesspaths';
     }
 }

@@ -13,9 +13,12 @@ License: GPLv2 or later
 Text Domain: peanut
 */
 
+use Peanut\PeanutPermissions\TAuthorizationPaths;
 use Peanut\sys\ViewModelManager;
 use Tops\cms\TRouteFinder;
 use Tops\cms\TRouter;
+use Tops\cms\wordpress\WordpressRouter;
+use Tops\sys\TUser;
 
 add_action( 'init', 'peanut_initialize' );
 function peanut_initialize() {
@@ -58,7 +61,7 @@ function peanut_initialize() {
     }
      */
 
-    \Tops\sys\TSession::Initialize();
+   \Tops\sys\TSession::Initialize();
 
     \Tops\sys\TTracer::Print(
         class_exists('PeanutTest\services\HelloWorldCommand') ?
@@ -68,15 +71,20 @@ function peanut_initialize() {
         throw new \Exception('Initialization failed');
     };
 
-    if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI']) ) {
-        $uri = preg_replace("/(^\/)|(\/$)/", "", $_SERVER['REQUEST_URI']);
+    $requestUri = $_SERVER['REQUEST_URI'] ?? null;
+    if ( (!empty($requestUri)) && ($requestUri !== '/')) { // home page always authorized
+        $uri = preg_replace("/(^\/)|(\/$)/", "", $requestUri);
+
         // $matched = TRouteFinder::matchWithRedirect($uri);
         $matched = TRouteFinder::match($uri);
+
         \Tops\sys\TTracer::Print( "Matched route: $uri");
         if ($matched) { // \Nutshell\cms\RouteFinder::match($uri)) {
+            $m = TRouteFinder::$matched;
             TRouter::Execute();
             exit;
         }
+        WordpressRouter::CheckPageAuthorization($requestUri);
     }
 
     $test = class_exists('Tops\cms\wordpress\WordpressUser');
@@ -85,6 +93,28 @@ function peanut_initialize() {
 
 }
 
+/**
+ * On sign in, redirect users to home page instead of profile or dashboard.
+ */
+add_filter('login_redirect', function($redirect_to, $requested_redirect_to, $user) {
+    // WordPress assigns an error object to $user if not signed in
+    if ($user && !is_wp_error($user)) {
+        if (!empty($requested_redirect_to)) {
+            // except sysadmin for times when we need to redirect to admin pages
+            if (in_array('sysadmin', $user->roles ?? [])) {
+                return $requested_redirect_to;
+            }
+            // redirect home ony if the redirect argument is not an profile or dashboard
+            $path = parse_url($requested_redirect_to, PHP_URL_PATH);
+            $admin_path = parse_url(admin_url(), PHP_URL_PATH); // typically /wp-admin/
+            if (!str_starts_with($path, rtrim($admin_path, '/'))) {
+                return $requested_redirect_to;
+            }
+        }
+        return home_url();
+    }
+    return $redirect_to;
+}, 10, 3);
 
 function peanut_enqueue_styles() {
     if ( is_user_logged_in()) {
@@ -208,7 +238,7 @@ add_filter( 'wp_get_nav_menu_items', function( $items ) {
     \Tops\sys\TTracer::Print('Menu items:',$items);
     \Tops\sys\TTracer::Stop();
 
-    $authorizations = new \Peanut\PeanutPermissions\TAuthorizationPaths();
+    $authorizations = TAuthorizationPaths::GetInstance();
     if ($authorizations->isAdmin) {
         return $items;
     }

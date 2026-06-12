@@ -84,10 +84,18 @@ abstract class TRouter
                 }
             }
             if (!$ok) {
+                if (TUser::getCurrent()->isAuthenticated()) {
+                    print('<p>You do not have permission to access this page.</p><p><a href="/">Return to home page.</a></p>');
+                    exit;
+                }
                 $signInConfig = TRouteFinder::$routes['signin'] ?? [];
                 $signInPage = $signInConfig['uri'] ?? null;
                 self::getInstance()->redirectToSignIn($signInPage);
             }
         }
+    }
+    public static function RedirectToLogIn($signInPage = null) : void
+    {
+        self::getInstance()->redirectToSignIn($signInPage);
     }
 }

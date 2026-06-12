@@ -117,6 +117,10 @@ class WordpressPermissionsManager extends TDBPermissionsManager
         return wp_roles()->get_role($roleHandle);
     }
 
+    public static function HandlePageAuthorization($url) {
+
+    }
+
     /**
      * @param string $roleName
      * @param string $permissionName

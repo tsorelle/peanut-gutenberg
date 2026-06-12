@@ -1,0 +1,88 @@
+<div id="pathauthorizations-load-message"><span class="fa fa-spinner fa-pulse fa-2x" style="color:lightgrey"></span></div>
+<div id="pathauthorizations-view-container" class="row" style="display: none">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-2">
+                    <a href="#" data-bind="click: newPath">Add Path</a>
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Path</th>
+                            <th>Roles</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: pathList">
+                        <tr>
+                            <td><a href="#" data-bind="click: $parent.updatePath"><i class="fa fa-edit"></i></a></td>
+                            <td data-bind="text: path"></td>
+                            <td data-bind="text: roleNames"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="access-path-modal" class="modal fade" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Access Path</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger" data-bind="visible:form.errorMessage() !== '', text:form.errorMessage">
+                    </p>
+                    <form>
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="path-input">URI (path)</label>
+                            <input id="path-input" data-bind="value:form.path,visible:form.isNew()" type="text" class="form-control" />
+                            <div data-bind="visible:!form.isNew(),text:form.path" class="text-muted"></div>
+                        </div>
+                        <div class="row mb-3" data-bind="visible:!form.delete()">
+                            <div class="col-md-6">
+                                <label class="form-label">Assigned Roles</label>
+                                <table class="table table-sm table-bordered table-hover">
+                                    <tbody data-bind="foreach: form.assigned">
+                                        <tr>
+                                            <td data-bind="text: $data"></td>
+                                            <td style="width: 40px; text-align: center;">
+                                                <a href="#" data-bind="click: $parent.onRemoveRole" title="Remove role"><i class="fa fa-chevron-right"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Available Roles</label>
+                                <table class="table table-sm table-bordered">
+                                    <tbody data-bind="foreach: form.available">
+                                        <tr>
+                                            <td style="width: 40px; text-align: center;">
+                                                <a href="#" data-bind="click: $parent.onAddRole" title="Add role"><i class="fa fa-chevron-left"></i></a>
+                                            </td>
+                                            <td data-bind="text: $data"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-check" data-bind="visible:!form.isNew()">
+                            <input class="form-check-input" type="checkbox" value="" id="check1" data-bind="checked:form.delete">
+                            <label class="form-check-label" for="check1">
+                                Delete
+                            </label>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" data-bind="click:doUpdatePath" type="button">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

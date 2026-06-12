@@ -8,7 +8,6 @@ use Peanut\PeanutPermissions\db\model\repository\AccessPathsRepository;
 
 class AccessPathManager
 {
-
     public function updatePath($path,$roleNames) {
         $repository = new AccessPathsRepository();
         $repository->updatePath($path,$roleNames);
@@ -23,6 +22,16 @@ class AccessPathManager
             $item->path = $path;
             $item->roleNames = implode(',',$roles);
             $result[] = $item;
+        }
+        return $result;
+    }
+
+    public function getRoleNames() {
+        $manager = \Tops\sys\TPermissionsManager::getPermissionManager();
+        $roles = $manager->getRoles();
+        $result = [];
+        foreach ($roles as $role) {
+            $result[] = $role->Key;
         }
         return $result;
     }

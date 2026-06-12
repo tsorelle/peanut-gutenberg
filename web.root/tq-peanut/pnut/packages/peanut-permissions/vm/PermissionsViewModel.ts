@@ -111,6 +111,32 @@ namespace PeanutPermissions {
             });
         };
 
+
+
+        initializeRoles = () => {
+            let me = this;
+            let request= null;
+            me.application.hideServiceMessages();
+            me.application.showWaiter(me.waitLabelUpdatePermissions);
+            me.services.executeService('peanut.peanut-permissions::InitializeRoles', request,
+                function (serviceResponse: Peanut.IServiceResponse) {
+                    me.application.hideWaiter();
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        let response = <IGetPermissionsResponse>serviceResponse.Value;
+                        me.permissionsList(response.permissions);
+                        me.roles = response.roles;
+                    }
+                }
+            ).fail(function () {
+                let err = me.services.getErrorInformation();
+                me.application.hideWaiter();
+            }).always(
+                function () {
+                    me.application.hideWaiter();
+                }
+            );
+        };
+
         showPermissionUpdateForm = (selected: IPermission) => {
             let me = this;
             me.permissionForm.permissionName(selected.permissionName);

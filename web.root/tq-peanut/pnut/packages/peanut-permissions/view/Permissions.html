@@ -3,6 +3,7 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
+                <p><a href="#" data-bind="click:initializeRoles">Initialize roles</a>   </p>
                 <table>
                     <thead>
                     <tr><th><translate params="code:'permission-name-title',default:'Permission name (needs transation)',translator:self"></translate></th><th>&nbsp</th></tr>
@@ -29,7 +30,7 @@
         </div>
     </div>
     <div class="modal" id="permission-modal">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button data-bind="visible:bootstrapVersion() < 4" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

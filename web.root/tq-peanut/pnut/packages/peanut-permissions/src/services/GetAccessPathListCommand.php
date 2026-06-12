@@ -10,7 +10,9 @@ class GetAccessPathListCommand extends TServiceCommand
     protected function run()
     {
        $manager = new AccessPathManager();
-       $response = $manager->getAccessPathList();
+       $response = new \stdClass();
+       $response->paths = $manager->getAccessPathList();
+       $response->roles = $manager->getRoleNames();
        $this->setReturnValue($response);
     }
 }

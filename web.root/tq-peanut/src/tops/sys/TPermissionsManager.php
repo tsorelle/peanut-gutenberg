@@ -17,16 +17,23 @@ abstract class TPermissionsManager
     const appAdminRoleName = 'Peanut Administrator';
     const appAdminPermissionName = 'Administer peanut features';
     const mailAdminRoleName = 'Mail Administrator';
-    const mailAdminPermissionName = 'Administer mailboxes';
+    const mailAdminPermissionName = 'Manage mailings';
+    const mailboxesPermissionName = 'Administer mailboxes';
     const directoryAdminRoleName = 'Directory Administrator';
     const directoryAdminPermissionName = 'Administer directory';
     const viewDirectoryPermissionName = 'View directory';
     const updateDirectoryPermissionName = 'Update directory';
     const managePermissionsPermissionName = 'Manage permissions';
+    const mailSenderRoleName = 'Mail Sender';
     const sendMailingsPermissionName = 'Send mailings';
     const editContentPermissionsName = 'Edit content';
-    const manageCommitteesPermissionsName = 'Manage committees';
+    const calendarAdminRoleName = 'Calendar Administrator';
+    const calendarAdminPermissionName = 'Manage calendar';
 
+    const committeeManagerRoleName = 'Committee Manager';
+    const manageCommitteesPermissionsName = 'Manage committees';
+    const documentAdminRoleName = 'Document Manager';
+    const documentAdminPermissionName = 'Manage document library';
 
     const keyFormat = TStrings::dashedFormat;
     /**
