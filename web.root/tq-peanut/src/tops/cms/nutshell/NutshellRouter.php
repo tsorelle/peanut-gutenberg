@@ -41,6 +41,11 @@ class NutshellRouter extends TRouter
         $user = TUser::getCurrent();
         $theme = $routeData['theme'] ?? 'default';
         $routeData['theme'] = $theme;
+        if (!empty($routeData['title'])) {
+            $routeData['title'] = str_replace('Nutshell',
+                TConfiguration::getValue('sitetitle','site'),
+                $routeData['title']);
+        }
         $routeData['themePath'] = URL_APPLICATION.'/themes/' . $theme;
         $extra = TPath::fromFileRoot(URL_APPLICATION.'/themes/' . $theme.'/extra.css');
         if (file_exists($extra)) {
