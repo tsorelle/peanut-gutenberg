@@ -1,7 +1,6 @@
-<footer id='site-footer' class="footer mt-auto py-3">
+<footer id='site-footer' class="footer mt-auto py-3 bg-body-tertiary">
     <div class="container">
         <div class="d-flex justify-content-end" style="float: right">
-
             <?php
 //                /** @var  $editorsignedin */
 //                if ($editorsignedin) {
