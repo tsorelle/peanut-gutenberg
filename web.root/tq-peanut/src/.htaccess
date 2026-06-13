@@ -1,2 +1,1 @@
-# nobody can access this folder
-deny from all
+Require all denied
