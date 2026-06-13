@@ -114,7 +114,7 @@ add_filter('login_redirect', function($redirect_to, $requested_redirect_to, $use
 }, 10, 3);
 
 function peanut_enqueue_styles() {
-    if ( is_user_logged_in()) {
+    if ( is_user_logged_in() && class_exists('Peanut\sys\ViewModelManager')) {
         // authenticated
         $peanutVersion = ViewModelManager::GetPeanutVersion();
         wp_enqueue_style(
@@ -131,6 +131,9 @@ add_action('wp_enqueue_scripts', 'peanut_enqueue_styles');
 
 add_action( 'wp_enqueue_scripts', 'peanut_scripts' );
 function peanut_scripts() {
+    if (!class_exists('Peanut\sys\ViewModelManager')) {
+        return;
+    }
     $peanutVersion = ViewModelManager::GetPeanutVersion();
     $optimized = \Tops\sys\TConfiguration::getBoolean('optimize','peanut',true);
     $loaderScript = $optimized ? 'peanut-loader.min.js' : 'PeanutLoader.js';
@@ -151,6 +154,9 @@ function peanut_scripts() {
 add_action('wp_footer', 'render_peanut_start_script', 999);
 
 function render_peanut_start_script() {
+    if (!class_exists('Peanut\sys\ViewModelManager')) {
+        return;
+    }
     /*
     $optimized = \Tops\sys\TConfiguration::getBoolean('optimize','peanut',true);
     $loaderScript = $optimized ? 'peanut-loader.min.js' : 'PeanutLoader.js';
