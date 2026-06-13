@@ -24,7 +24,18 @@
 <li><a href="/tq-peanut/application/docs/components/selectlistobservable.html">Search List Observable</a></li>
 </ul>
 <h2>WordPress</h2>
-<h3>Content Management</h3>
 <ul>
-<li><a href="/tq-peanut/application/docs/wordpress/content-block.html">The Gutenberg Peanut Block</a></li>
+<li><a href="/tq-peanut/application/docs/wordpress/access-control.html">Access Control</a></li>
+<li><a href="/tq-peanut/application/docs/wordpress/peanut-block.html">The Gutenberg Peanut Block</a></li>
+<li><a href="/tq-peanut/application/docs/wordpress/peanut-shortcodes.html">Peanut shortcodes</a></li>
+</ul>
+<h2>Concrete CMS</h2>
+<ul>
+<li><a href="/tq-peanut/application/docs/concretecms/content-block.html">The Knockout Block</a></li>
+</ul>
+<h2>Nutshell</h2>
+<ul>
+<li><a href="/tq-peanut/application/docs/nutshell/nutshell-overview.html">Overview</a></li>
+<li><a href="/tq-peanut/application/docs/nutshell/routing.html">Routing (for WordPress too)</a></li>
+<li><a href="/tq-peanut/application/docs/nutshell/site-map.html">Site Map</a></li>
 </ul>

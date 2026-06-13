@@ -122,6 +122,15 @@ if ($source === 'all') {
     $destFile = "$docPath/markdown.css";
     copy($sourceFile, $destFile);
 
+    $htaccess_path ="$docPath/.htaccess";
+    if (!file_exists($htaccess_path)) {
+        $result = file_put_contents($htaccess_path, "Require all granted\n");
+        if ($result === false) {
+            // handle error — log it, throw an exception, etc.
+            error_log("Failed to create .htaccess at {$htaccess_path}");
+        }
+    }
+
 }
 
 print "Done.\n";

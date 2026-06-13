@@ -13,7 +13,7 @@
 - [Debug with browser](peanut/debug-with-browser.md)
 - [Trouble Shooting](notes/trouble-shoot.md)
 
-### Components
+### Components 
 - [Overview](components/components-overview.md)
 - [Lookup Edit](components/lookupedit.md)
 - [Modal Confirm](components/modalconfirm.md)
@@ -22,8 +22,15 @@
 - [Search List Observable](components/selectlistobservable.md)
 
 ## WordPress 
+- [Access Control](wordpress/access-control.md)
+- [The Gutenberg Peanut Block](wordpress/peanut-block.md)
+- [Peanut shortcodes](wordpress/peanut-shortcodes.md)
 
-### Content Management
-- [The Gutenberg Peanut Block](wordpress/content-block.md)
+## Concrete CMS
+- [The Knockout Block](concretecms/content-block.md)
 
+## Nutshell
+- [Overview](nutshell/nutshell-overview.md)
+- [Routing (for WordPress too)](nutshell/routing.md)
+- [Site Map](nutshell/site-map.md)
 
