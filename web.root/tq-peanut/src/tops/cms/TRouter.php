@@ -88,7 +88,7 @@ abstract class TRouter
                     print('<p>You do not have permission to access this page.</p><p><a href="/">Return to home page.</a></p>');
                     exit;
                 }
-                $signInConfig = TRouteFinder::$routes['signin'] ?? [];
+                $signInConfig = TRouteFinder::GetRoutes()['signin'] ?? [];
                 $signInPage = $signInConfig['uri'] ?? null;
                 self::getInstance()->redirectToSignIn($signInPage);
             }

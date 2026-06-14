@@ -43,10 +43,19 @@ class TRouteFinder
         return $matched;
     }
 
+
+    public static function GetRoutes()
+    {
+        if (!isset(self::$routes)) {
+            self::$routes =
+                parse_ini_file(DIR_CONFIGURATION . '/routing.ini', true);
+        }
+        return self::$routes;
+    }
     public static function match($uri) : bool
     {
         $uri = self::normalizeUri($uri);
-        self::$routes = parse_ini_file(DIR_CONFIGURATION . '/routing.ini', true);
+        self::GetRoutes();
         foreach (self::$routes as $matchPath => $values) {
             if (str_starts_with($uri, $matchPath)) {
                 TTracer::Print("Match found for path: $matchPath");

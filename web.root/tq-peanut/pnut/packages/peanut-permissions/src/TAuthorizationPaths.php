@@ -5,6 +5,7 @@ namespace Peanut\PeanutPermissions;
 use PDO;
 use Peanut\PeanutPermissions\db\AccessPathManager;
 use Peanut\PeanutPermissions\db\model\repository\AccessPathsRepository;
+use Tops\cms\TRouteFinder;
 use Tops\db\TQuery;
 use Tops\sys\TUser;
 use Tops\sys\TWebSite;
@@ -49,10 +50,10 @@ class TAuthorizationPaths
             $this->roles = $roles;
         }
 
-        if (!$this->isAdmin) {
+       // if (!$this->isAdmin) {
             $this->getAccessPaths();
             $this->siteUrl = TWebSite::GetSiteUrl();
-        }
+       // }
     }
 
     public $isAdmin = false;
@@ -66,7 +67,7 @@ class TAuthorizationPaths
     private function getAccessPaths() {
         if (empty($_SESSION[self::ACCESS_LIST_SESSIONKEY])) {
             $repository = new AccessPathsRepository();
-            $result = $repository->getAccessPathRoles();
+            $result =  $this->mergeNutshellAccessRules($repository->getAccessPathRoles());
             $_SESSION[self::ACCESS_LIST_SESSIONKEY] = $result;
             $this->accessPaths = $result;
         }
@@ -127,6 +128,16 @@ class TAuthorizationPaths
     public function testAccessPaths() {
         $this->getAccessPaths();
         return $this->accessPaths;
+    }
+
+    private function mergeNutshellAccessRules(array $result)
+    {
+        $routing = TRouteFinder::GetRoutes();
+        $authorized = array_filter($routing, fn($element) => !empty($element['roles']));
+        foreach ($authorized as  $path => $config) {
+            $result[$path] = explode(',', $config['roles']);
+        }
+        return $result;
     }
 
 }
