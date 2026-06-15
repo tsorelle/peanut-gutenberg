@@ -21,7 +21,9 @@
         "mailgun/mailgun-php": "*",
         "symfony/http-client": "*",
         "nyholm/psr7": "*",
-      "ext-calendar": "*"
+      "ext-calendar": "*",
+      "ext-dom": "*",
+      "ext-simplexml": "*"
     },
     "config": {
         "allow-plugins": {
