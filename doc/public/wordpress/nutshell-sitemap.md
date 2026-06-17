@@ -19,7 +19,7 @@ The return value is an \stdclass object containing:
 - errors: array of error messages or empty if successful
 - outputFile: string with absolute path to the generated sitemap.xml file.
 
-## Generating the Menu
+## Generating the Site
 
 The Peanut plugin, peanut.php, features an action filter that will run the menu regeneration 
 when the main menu is changed and keep the Nutshell menu in sync with the WordPress main menu.  
@@ -32,9 +32,15 @@ menu-name=main-menu
 If no setting is provided, the default menu name is `main-menu`.
 
 The builder will also run when changes to authorization paths are made using the 
-administration feature.
+administration feature and you click the "Finalize" link to update the site map. 
+Note that this feature requires an entry in classes.ini:
 
-If you need to regenerate the menu configuration, use the `BuildmenuTest` script. 
+```ini
+[system.eventhandler]
+type='Tops\cms\wordpress\WordpressEventHandler'
+```
+
+If you need to regenerate the site map "manually", use the `BuildmenuTest` script. 
 ```
 https://(your site)/peanut/tests/buildmenu
 ```

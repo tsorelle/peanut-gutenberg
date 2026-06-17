@@ -78,11 +78,6 @@ class SiteMap
         return $menu;
     }
 
-    private function getDirectoryRoles($path)
-    {
-        return $roles;
-    }
-
     private function authorized($roles)
     {
         if (empty($roles) || $this->user->isAdmin()) {

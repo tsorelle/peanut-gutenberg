@@ -25,6 +25,7 @@
 - [Access Control](wordpress/access-control.md)
 - [The Gutenberg Peanut Block](wordpress/peanut-block.md)
 - [Peanut shortcodes](wordpress/peanut-shortcodes.md)
+- [WordPress Menu & Nutshell Site Map](wordpress/nutshell-sitemap.md)
 
 ## Concrete CMS
 - [The Knockout Block](concretecms/content-block.md)

@@ -28,6 +28,7 @@
 <li><a href="/tq-peanut/application/docs/wordpress/access-control.html">Access Control</a></li>
 <li><a href="/tq-peanut/application/docs/wordpress/peanut-block.html">The Gutenberg Peanut Block</a></li>
 <li><a href="/tq-peanut/application/docs/wordpress/peanut-shortcodes.html">Peanut shortcodes</a></li>
+<li><a href="/tq-peanut/application/docs/wordpress/nutshell-sitemap.html">WordPress Menu &amp; Nutshell Site Map</a></li>
 </ul>
 <h2>Concrete CMS</h2>
 <ul>
