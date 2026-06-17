@@ -120,3 +120,21 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,
   border: 1px double black;
   padding: 2rem;
 }
+
+.landing-page-menu {
+  font-size: 20px;
+}
+
+.landing-page-menu div.ccm-block-autonav {
+  background-color: white !important;
+}
+.landing-page-menu  ul li a {
+  /* color: #3d586a !important; */
+  text-decoration: none !important;
+}
+
+.landing-page-menu ul li a:hover {
+  /* color: white !important; */
+  background-color: #e0dede;
+  text-decoration: none !important;
+}

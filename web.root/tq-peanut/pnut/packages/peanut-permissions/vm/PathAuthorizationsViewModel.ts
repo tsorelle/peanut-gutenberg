@@ -11,6 +11,8 @@ namespace PeanutPermissions {
     export class PathAuthorizationsViewModel extends Peanut.ViewModelBase {
         allRoles: string[] = [];
         // observables
+         changed = ko.observable<boolean>(false);
+         finalizeEvent : string = null;
 
         pathList = ko.observableArray<IAccessPathListItem>();
         form = {
@@ -33,6 +35,7 @@ namespace PeanutPermissions {
                         const response = serviceResponse.Value;
                         me.allRoles = response.roles;
                         me.pathList(response.paths);
+                        me.finalizeEvent = response.finalize;
                     }
                     me.application.hideWaiter();
                     me.bindDefaultSection();
@@ -120,6 +123,7 @@ namespace PeanutPermissions {
             me.services.executeService('peanut.peanut-permissions::UpdateAccessPath',request,
                 function(serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        me.changed(me.finalizeEvent !== null);
                         me.application.hideWaiter();
                         me.pathList(serviceResponse.Value);
                         me.hideModal('access-path-modal');
@@ -131,6 +135,27 @@ namespace PeanutPermissions {
             }).always(function () {
                 me.application.hideWaiter();
             });
+        }
+        finalizeChanges = () => {
+            let me = this;
+            const request = {
+                event: me.finalizeEvent,
+                success: 'Authorizations updated'
+            }
+            me.application.showWaiter('Finalizing...');
+            me.services.executeService('Peanut::EventHandler',request,
+                function(serviceResponse: Peanut.IServiceResponse) {
+                    console.log('Authorizations updated');
+                    me.application.hideWaiter();
+                }
+            ).fail(() => {
+                let trace = me.services.getErrorInformation();
+            }
+            ).always(() => {
+                me.application.hideWaiter();
+            });
+
+            me.changed(false);
         }
     }
 

@@ -71,8 +71,6 @@ class TConfiguration
         if (!isset($ini['errors'])) {
             $ini['errors'] = array();
         }
-
-
     }
 
     private static function loadIni($fileName = 'settings.ini', $iniPath = null)

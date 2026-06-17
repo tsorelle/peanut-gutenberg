@@ -1,31 +1,50 @@
-# Nutshell Menu Generation
+# Nutshell Site Map Generation
 
 This document explains how to generate the Peanut Nutshell menu configuration (`sitemap.xml`) from the WordPress navigation menu.
 
 ## Overview
 
-The Nutshell menu is driven by an XML configuration file located in `web.root/tq-peanut/application/config/sitemap.xml`. While this file can be edited manually, a routine is provided to synchronize it with the WordPress `main-menu`.
+The Nutshell menu and site map is driven by an XML configuration file located in `web.root/tq-peanut/application/config/sitemap.xml`. 
+While this file can be edited manually, a class is provided to synchronize it with your WordPress main menu.
+
+The builder class is: Tops\cms\wordpress\WordPressSiteMapBuilder.  Example usage:
+
+```php
+$menuName = 'my-main-menu';
+$builder = new WordPressSiteMapBuilder($menuName);
+$result = $builder->build();
+```
+The return value is an \stdclass object containing:
+- success: boolean indicating whether the build was successful
+- errors: array of error messages or empty if successful
+- outputFile: string with absolute path to the generated sitemap.xml file.
 
 ## Generating the Menu
 
-To generate the menu configuration, use the `BuildmenuTest` script. This script fetches the WordPress menu items, resolves permissions (roles) via the Peanut Access Paths repository, and formats the output as XML.
+The Peanut plugin, peanut.php, features an action filter that will run the menu regeneration 
+when the main menu is changed and keep the Nutshell menu in sync with the WordPress main menu.  
+To identify the main menu by menu name, place this entry in settings.ini:
 
-### Command
+```ini
+[wordpress]
+menu-name=main-menu
+```
+If no setting is provided, the default menu name is `main-menu`.
 
-Run the following command from the project root:
+The builder will also run when changes to authorization paths are made using the 
+administration feature.
+
+If you need to regenerate the menu configuration, use the `BuildmenuTest` script. 
+```
+https://(your site)/peanut/tests/buildmenu
+```
+
+Or run the following command from the project root:
 
 ```powershell
 php bin/pnutstart.inc PeanutTest\scripts\BuildmenuTest
 ```
 
-*Note: Ensure that `php` is in your system path or use the full path to your PHP executable.*
-
-### Output
-
-The script writes the generated XML to:
-`web.root/tq-peanut/application/config/wp-sitemap.xml`
-
-This output file is separate from the production `sitemap.xml` to prevent accidental overwrites. You can inspect the results and merge them into the main configuration as needed.
 
 ## Generation Logic
 
@@ -40,11 +59,13 @@ This output file is separate from the production `sitemap.xml` to prevent accide
 
 WordPress navigation menus may be limited to two levels of hierarchy depending on the theme or configuration. However, Peanut's Nutshell menu supports deeper nesting.
 
-If your application requires a 3-level or deeper menu structure, you may need to manually add these sub-elements to the XML file.
+If your application requires a 3-level or deeper menu structure, 
+you may need to manually add these sub-elements to the sitemap. file.
 
 ### Examples of Manual Nesting
 
-Refer to `web.root/tq-peanut/application/config/sitemap.xml` for examples of manual nesting under the `tools/email` and `tools/admin` nodes:
+Here are examples of manual nesting under the `tools/email` and `tools/admin` nodes.
+These sub-items appear in the Nutshell menu.
 
 ```xml
 <tools title="Tools" description="" roles="" uri="tools" icon="fa-solid fa-gear">

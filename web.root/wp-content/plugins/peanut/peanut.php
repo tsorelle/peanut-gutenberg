@@ -20,9 +20,11 @@ use Tops\cms\TRouter;
 use Tops\cms\wordpress\WordpressRouter;
 use Tops\sys\TUser;
 
-add_action( 'init', 'peanut_initialize' );
-function peanut_initialize() {
-    $traceEnabled = class_exists('Tops\sys\TTracer');
+function initializePeanut() {
+    if (class_exists('Tops\sys\TSession')) {
+        return true; // already initialized
+    }
+    // error_log("initializePeanut");
     if (!empty($_SERVER['REQUEST_URI'])) {
         $reqExtension = strtolower( pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION));
         $p = strpos($reqExtension, '?');
@@ -44,23 +46,15 @@ function peanut_initialize() {
     require_once DIR_APPLICATION . '/config/peanut-bootstrap.php';
 
     \Peanut\Bootstrap::initialize();
-    if (!class_exists('Tops\sys\TTracer')) {
-        exit ("Tracer not loaded");
-    }
-    $traceEnabled = true;
-    $tracerOn = false;
-   // $tracerOn = true;
-    if ($tracerOn) {
-        \Tops\sys\TTracer::Start();
-    }
+    return class_exists('Tops\sys\TSession');
+}
 
-    // don't start session here, WP doesn't like it.
-    /**
-    $status = session_status();
-    if ($status == PHP_SESSION_NONE) {
-         session_start();
+add_action( 'init', 'peanut_initialize' );
+function peanut_initialize() {
+    if (!initializePeanut()) {
+        error_log('Peanut initialization failed');
+        return;
     }
-     */
 
    \Tops\sys\TSession::Initialize();
 
@@ -86,8 +80,6 @@ function peanut_initialize() {
 
     $test = class_exists('Tops\cms\wordpress\WordpressUser');
     register_block_type(__DIR__ . '/blocks/peanut-block');
-
-
 }
 
 /**
@@ -258,4 +250,29 @@ add_filter( 'wp_get_nav_menu_items', function( $items ) {
     }
     return $items;
 });
+
+add_action('wp_update_nav_menu', function($menu_id) {
+    if (initializePeanut()) {
+        static $done = false;
+        if ($done) {
+            return;
+        }
+        $menu = wp_get_nav_menu_object($menu_id);
+        $name = \Tops\sys\TConfiguration::getValue('menu-name','wordpress','main-menu');
+        if ($menu->name === $name) {
+            $done = true;
+            $builder= new \Tops\cms\wordpress\WordPressSiteMapBuilder();
+            $result = $builder->build();
+            $ok = $result->success ?? false;
+            if ($ok) {
+                error_log('Sitemap builder succeeded. File: '.$result->outputFile);
+            }
+            else {
+                $errors = $result->errors ?? [];
+                error_log('Sitemap builder failed: '.implode(', ', $errors));
+            }
+        }
+    }
+});
+
 

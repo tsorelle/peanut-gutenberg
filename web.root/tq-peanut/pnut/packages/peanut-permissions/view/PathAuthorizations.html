@@ -5,6 +5,9 @@
             <div class="col-md-12">
                 <div class="mb-2">
                     <a href="#" data-bind="click: newPath">Add Path</a>
+                    <span data-bind="visible: changed">
+                        &nbsp;|&nbsp;<a href="#" data-bind="click:finalizeChanges">Finalize</a>
+                    </span>
                 </div>
                 <table class="table table-striped table-bordered table-hover">
                     <thead>

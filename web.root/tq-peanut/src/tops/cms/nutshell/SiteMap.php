@@ -2,7 +2,10 @@
 
 namespace Tops\cms\nutshell;
 
+use Tops\cms\TRouteFinder;
+use Tops\cms\TRouter;
 use Tops\sys\IUser;
+use Tops\sys\TConfiguration;
 use Tops\sys\TUser;
 use Tops\sys\TWebSite;
 
@@ -56,11 +59,28 @@ class SiteMap
         $menu = [];
         foreach ($n[0] as $key => $node) {
             $item = $this->getItem($key,$node);
+            $uri = $item->uri ?? null;
+            // roles that are preassigned, either manually or by a process such as WordPressSiteMapBuilder
+            // will override roles in routing.ini
+            if (isset($item->roles)) {
+                // roles from xml attribute
+                $roles = $item->roles ?? '';
+            }
+            else {
+                // roles from routing.ini
+                $routes = TRouteFinder::GetRoutes();
+                $roles = $routes[$path]['roles'] ?? '';
+            }
             if ($this->authorized($item->roles ?? [])) {
                 $menu[] = $item;
             }
         }
         return $menu;
+    }
+
+    private function getDirectoryRoles($path)
+    {
+        return $roles;
     }
 
     private function authorized($roles)
@@ -69,6 +89,7 @@ class SiteMap
             return true;
         }
         $roles = explode(',',$roles);
+
         if ($this->user->isAuthenticated()) {
             foreach ($roles as $role) {
                 if ($role=='authenticated' || $this->user->isMemberOf($role)) {
