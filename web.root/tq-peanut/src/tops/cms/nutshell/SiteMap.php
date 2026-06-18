@@ -191,7 +191,10 @@ class SiteMap
                 foreach ($children as $child) {
                     // $description = empty($child->description) ? $child->name : $child->description;
                     $description = $child->description ?? '';
-                    $href = empty($child->uri) ? '/'.$item->name.'/'.$child->name : $child->uri;
+                    $href = empty($child->uri) ? $item->name.'/'.$child->name : $child->uri;
+                    if ($href !== null && !str_starts_with($href, '/')) {
+                        $href = '/'.$href;
+                    }
                     $lines[] = sprintf('          <li><a class="dropdown-item" href="%s" title="%s">%s</a></li>',
                         $href,$description, $child->title);
                 }

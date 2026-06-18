@@ -37,7 +37,7 @@ class NutshellRouter extends TRouter
 
         // print "<p>Routing page</p>";
         $routeData = TRouteFinder::$matched;
-        $uri = $routeData['uri'];
+        $uri = $routeData['uri'] ?? null;
         $user = TUser::getCurrent();
         $theme = $routeData['theme'] ?? 'default';
         $routeData['theme'] = $theme;
