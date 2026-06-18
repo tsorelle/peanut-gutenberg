@@ -17,6 +17,9 @@ class AddRoleCommand extends TServiceCommand
         }
         $manager= TPermissionsManager::getPermissionManager();
         $manager->addRole($roleName);
-        $this->setReturnValue($manager->getRoles());
+        $roles = $manager->getRoles();
+        // todo: test this, is admin needed here?
+        unset($roles['administrator']);
+        $this->setReturnValue($roles);
     }
 }

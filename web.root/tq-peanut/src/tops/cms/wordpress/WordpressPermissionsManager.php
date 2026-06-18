@@ -101,7 +101,7 @@ class WordpressPermissionsManager extends TDBPermissionsManager
     public function getActualRoles($useWpFormat = true) {
         $result = array();
         $roleObjects =  wp_roles()->roles;
-        unset($roleObjects['administrator']);
+        // unset($roleObjects['administrator']);
         foreach ($roleObjects as $roleName => $roleObject) {
             $item = $this->createRoleObject($roleName,$roleObject['name']);
             if ($useWpFormat) {
