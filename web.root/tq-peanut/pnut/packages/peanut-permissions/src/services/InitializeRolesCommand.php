@@ -71,8 +71,6 @@ class InitializeRolesCommand extends TServiceCommand
             // mailing permissions
             $this->assignRole(TPermissionsManager::mailAdminRoleName,
                 TPermissionsManager::mailAdminPermissionName, 'Mail Administrator');
-            $this->assignRole(TPermissionsManager::mailboxesPermissionName,
-                TPermissionsManager::mailboxesPermissionName, 'Mail Administrator');
             $this->assignRole(TPermissionsManager::mailAdminRoleName,
                 TPermissionsManager::sendMailingsPermissionName, 'Mail Administrator');
             $this->assignRole(TPermissionsManager::mailSenderRoleName,
