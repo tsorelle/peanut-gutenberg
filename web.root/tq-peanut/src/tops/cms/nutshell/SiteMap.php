@@ -57,6 +57,9 @@ class SiteMap
     public function getMenu($path='/*') {
         $n = $this->xmldata->xpath($path);
         $menu = [];
+        if (!isset($n[0])) {
+            return $menu;
+        }
         foreach ($n[0] as $key => $node) {
             $item = $this->getItem($key,$node);
             $uri = $item->uri ?? null;

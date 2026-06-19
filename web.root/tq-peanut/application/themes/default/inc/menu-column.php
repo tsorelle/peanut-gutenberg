@@ -6,7 +6,10 @@
 /** @var string $menuclasses */
 
 print sprintf("<div class='col-md-%s'>\n",$colsize);
-if (!empty($menutitle)) { ?>
+if (!empty($menutitle)) {
+    $menutitle = str_replace('[[user-name]]' , Tops\sys\TUser::GetCurrent()->getFullName(), $menutitle);
+    ?>
+
     <div class="menu-title">
         <h3>
             <?php print $menutitle ?>

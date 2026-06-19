@@ -73,22 +73,31 @@ class WordPressSiteMapBuilder
 
     private function getTagName($item, &$usedTags) : string
     {
-        // Prioritize title as requested
-        $title = $item->title ?? $item->post_title ?? '';
-        $tagName = strip_tags($title);
-        $tagName = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $tagName));
+        $url = $item->url ?? '';
+        $path = parse_url($url, PHP_URL_PATH);
+        $trimmedPath = trim($path ?? '', '/');
+        if (empty($trimmedPath)) {
+            $tagName = 'home';
+        } else {
+            $parts = explode('/', $trimmedPath);
+            $tagName = end($parts);
+        }
 
-        if (empty($tagName) || is_numeric(substr($tagName, 0, 1))) {
-            $tagName = 'item' . ($tagName ?: $item->ID);
+        if (isset($usedTags[$tagName])) {
+            error_log("Duplicate tag name '$tagName' derived from URL '$url' in parent context.");
+            $tagName = 'item-' . ($item->ID ?? uniqid());
+        } elseif (!preg_match('/^[a-zA-Z_][a-zA-Z0-9\._-]*$/', $tagName) || stripos($tagName, 'xml') === 0) {
+            error_log("Invalid XML tag name '$tagName' derived from URL '$url'.");
+            $tagName = 'item-' . ($item->ID ?? uniqid());
         }
 
         $baseTagName = $tagName;
         $counter = 1;
         while (isset($usedTags[$tagName])) {
-            $tagName = $baseTagName . ++$counter;
+            $tagName = $baseTagName . '-' . $counter++;
         }
-        $usedTags[$tagName] = true;
 
+        $usedTags[$tagName] = true;
         return $tagName;
     }
 
