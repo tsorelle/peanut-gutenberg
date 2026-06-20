@@ -111,12 +111,16 @@ class TAuthorizationPaths
                 $authorized = $mapped;
             }
             else {
-                $filtered = array_filter($this->accessPaths, fn($key) => str_starts_with($key, $dir), ARRAY_FILTER_USE_KEY);
-                foreach ($filtered as $authRoles) {
+                $directoryRoles = array_filter($this->accessPaths, fn($key) => $key === $dir, ARRAY_FILTER_USE_KEY);
+                foreach ($directoryRoles as $authRoles) {
                     if (!empty($authRoles)) {
-                        $authorized = !empty(array_intersect($this->roles, $authRoles));
+                        if (empty(array_intersect($this->roles, $authRoles))) {
+                            // $authorized = !empty(array_intersect($this->roles, $authRoles));
+                            $authorized = false;
+                        }
                     }
                 }
+                $this->map[$dir] = $authorized;
             }
             if ($authorized === false) {
                 break;
