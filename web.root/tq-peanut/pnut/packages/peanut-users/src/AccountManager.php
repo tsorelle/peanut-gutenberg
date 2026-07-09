@@ -102,7 +102,9 @@ class AccountManager implements IUserAccountManager
                 $profile['email'] = $email;
             }
             else {
-                return $checkResult;
+                $result = new  TAddUserAccountResponse();
+                $result->errorCode = $checkResult;
+                return $result;
             }
         }
         else {

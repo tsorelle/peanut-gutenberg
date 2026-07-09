@@ -31,6 +31,10 @@ namespace Peanut {
             this.subscribe();
         }
 
+        public hasOptions = () => {
+            let me = this;
+            return (me.options().length > 0);
+        }
         public setOptions(optionsList: ILookupItem[] = [],
                           defaultValue: any = null) {
             let me = this;
@@ -53,6 +57,10 @@ namespace Peanut {
 
         public setValue(value: any) {
             let me = this;
+            if (value == null) {
+                me.selected(null);
+                return;
+            }
             let options = me.options();
             let option = options.find(function (item: ILookupItem) {
                 return item.id == value;

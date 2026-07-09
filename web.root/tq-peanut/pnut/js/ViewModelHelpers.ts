@@ -210,6 +210,38 @@ namespace Peanut {
         public static checkNumeric(value: any) : boolean {
             return (!isNaN(parseFloat(value)) && isFinite(value));
         }
+        public static checkInteger(value: any, allowBlank: false) : boolean {
+            if (allowBlank && value == '') {
+                return true;
+            }
+            return  (!isNaN(parseInt(value)) && isFinite(value));
+        }
+        public static toAmPm(timeStr) {
+            const match = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+            if (!match) return null;
+            let hours = parseInt(match[1], 10);
+            const minutes = match[2];
+            const period = hours < 12 ? 'AM' : 'PM';
+            if (hours === 0) hours = 12;       // 00 → 12 (midnight)
+            else if (hours > 12) hours -= 12;  // 19 → 7
+            return `${hours}:${minutes} ${period}`;
+        }
+        public static to24Hour(timeStr) {
+            // Normalize: trim, uppercase, remove extra spaces
+            const str = timeStr.trim().toUpperCase().replace(/\s+/g, '');
+            // Match optional hours, optional :minutes, and AM/PM
+            const match = str.match(/^(\d{1,2})(?::(\d{2}))?(AM|PM)$/);
+            if (!match) return null;
+            let hours = parseInt(match[1], 10);
+            const minutes = match[2] ? match[2] : '00';
+            const period = match[3];
+            if (period === 'AM') {
+                if (hours === 12) hours = 0;        // 12AM → 00
+            } else {
+                if (hours !== 12) hours += 12;      // 7PM → 19, but 12PM stays 12
+            }
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
         public static validateCurrency(value: any): any {
             if (!value) {
                 return false;
@@ -283,8 +315,9 @@ namespace Peanut {
          *  If not valid returns FALSE
          *
          * @param ts  time string
+         * @param errorReturn  NULL or false
          */
-        public static parseTimeString(ts: string) {
+        public static parseTimeString(ts: string) : string {
             if (!ts) {
                 // null or undefined
                 return '';
@@ -321,7 +354,7 @@ namespace Peanut {
                 ts = ts.substring(0, p).trim();
                 if (ts === '') {
                     // must be something like "  am " or "PM   " with no other value
-                    return false;
+                    return null;
                 }
             }
 
@@ -332,7 +365,7 @@ namespace Peanut {
             let hr: any = Number(parts[0].trim());
             if (isNaN(hr) || (formatType > 0 && (hr < 1 || hr > 12))) {
                 // unajusted am/pm must be in range of 1 to 12
-                return false;
+                return null;
             }
             if (formatType === 1 && hr === 12) {
                 // 12am is 00 - midnight
@@ -347,13 +380,13 @@ namespace Peanut {
                 min = Number(s);
                 if (isNaN(min) || min > 59 || min < 0 || s.length < 2) {
                     // minute must be 2 digits in 0 to 59 range
-                    return false;
+                    return null;
                 }
             }
 
             if (min < 0 || hr < 0 || hr > 23 || min > 59) {
                 // out of range
-                return false;
+                return null;
             }
 
             if (hr < 10) {
@@ -405,7 +438,7 @@ namespace Peanut {
                 return 'Invalid date'
             }
             ts = Helper.parseTimeString(ts);
-            if (ts === false) {
+            if (!ts) {
                 return 'Invalid time';
             }
             if (!ts) {
