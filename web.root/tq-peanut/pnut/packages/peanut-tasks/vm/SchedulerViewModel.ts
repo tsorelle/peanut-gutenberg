@@ -91,16 +91,9 @@ namespace PeanutTasks {
             let me = this;
             Peanut.logger.write('Scheduler Init');
             me.application.loadResources([
-/*
-                '@lib:jqueryui-css',
-                '@lib:jqueryui-js',
-                '@lib:lodash',
-*/
                 '@pnut/selectListObservable',
 
-                // ,'@pnut/ViewModelHelpers'
             ], () => {
-                me.application.registerComponents('@pnut/lookup-select', () => {
 
                     me.taskEditForm.intervalType= new Peanut.selectListObservable(me.onIntervalTypeChange, [
                         {name: 'On demand', id: 1},
@@ -151,7 +144,6 @@ namespace PeanutTasks {
                         me.bindDefaultSection();
                         successFunction();
                     });
-                });
             });
 
         }

@@ -15,6 +15,7 @@ namespace Peanut {
             me.defaultValue = defaultValue;
             me.setValue(defaultValue);
             me.selectHandler = selectHandler;
+            me.subscription = null;
         }
 
         public static CreateLookup(
@@ -38,7 +39,7 @@ namespace Peanut {
         public setOptions(optionsList: ILookupItem[] = [],
                           defaultValue: any = null) {
             let me = this;
-            if (optionsList == undefined || optionsList == null) {
+            if (optionsList == undefined) {
                 console.error('Undefinded options list');
                 optionsList = [];
             }
@@ -58,14 +59,26 @@ namespace Peanut {
         public setValue(value: any) {
             let me = this;
             if (value == null) {
+                if (me.selected()) {
                 me.selected(null);
+                }
                 return;
             }
             let options = me.options();
             let option = options.find(function (item: ILookupItem) {
                 return item.id == value;
             });
+            let current = me.selected();
+            if (option) {
+                if (option !== current) {
             me.selected(option);
+                }
+            }
+            else {
+                if (current !== null) {
+                    me.selected(null);
+                }
+            }
         }
 
         public getOptions() {
@@ -99,12 +112,16 @@ namespace Peanut {
             let me = this;
             if (me.subscription) {
                 me.subscription.dispose();
+                me.subscription = null;
             }
         }
 
         public subscribe() {
             let me = this;
+            me.unsubscribe();
+            if (me.selectHandler) {
             me.subscription = me.selected.subscribe(me.selectHandler);
+            }
         }
 
         public assignNameValueList(lookupItems : Peanut.INameValuePair[]) {

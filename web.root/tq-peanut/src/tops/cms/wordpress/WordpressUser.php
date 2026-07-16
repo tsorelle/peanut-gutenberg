@@ -15,7 +15,7 @@ use Tops\sys\TUser;
 use WP_User;
 
 /**
- * Class TConcrete5User
+ * Class WordpressUser
  * @package Tops\sys
  *
  */
