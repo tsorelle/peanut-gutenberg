@@ -43,7 +43,7 @@ function initializePeanut() {
         __DIR__;
 
     require_once  "$peanutRoot/tq-peanut/bootstrap/definitions.php";
-    require_once DIR_APPLICATION . '/config/peanut-bootstrap.php';
+    require_once  DIR_PNUT_BOOTSTRAP. '/peanut-bootstrap.php';
 
     \Peanut\Bootstrap::initialize();
     return class_exists('Tops\sys\TSession');

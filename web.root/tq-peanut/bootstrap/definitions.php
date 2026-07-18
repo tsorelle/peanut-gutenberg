@@ -23,6 +23,10 @@ if (PHP_VERSION_ID < PEANUT_PHP_VERSION) {
  */
 include_once 'PathFinder.php';
 
+if (!defined('DIR_PNUT_BOOTSTRAP')) {
+    define('DIR_PNUT_BOOTSTRAP', __DIR__);
+}
+
 /**
  * Document root can be pre-defined for testing purposes.
  */
@@ -50,28 +54,28 @@ if (!defined('URL_PEANUT_ROOT')) {
 /**
  * Absolute path to application
  */
-if (!defined('DIR_APPLICATION')) {
+if (!defined('PNUT_APPLICATION')) {
     $path = realpath(__DIR__."/../application");
     if ($path) {
         $path = PathFinder::normalize($path);
-        define('DIR_APPLICATION', $path);
+        define('PNUT_APPLICATION', $path);
     }
     else if  (is_dir(DIR_ROOT . '/application')){
         $path = PathFinder::normalize(DIR_ROOT . '/application');
-        define('DIR_APPLICATION', $path);
+        define('PNUT_APPLICATION', $path);
     }
 }
-if (!defined('DIR_APPLICATION')) {
+if (!defined('PNUT_APPLICATION')) {
     exit('Application directory not found.');
 }
 
 if (!defined('URL_APPLICATION')) {
-    $path = substr(DIR_APPLICATION, strlen(DIR_ROOT));
+    $path = substr(PNUT_APPLICATION, strlen(DIR_ROOT));
     define('URL_APPLICATION', $path);
 }
 
 if (!defined('DIR_CONFIGURATION')) {
-    define('DIR_CONFIGURATION', DIR_APPLICATION . '/config');
+    define('DIR_CONFIGURATION', DIR_PEANUT_ROOT . '/config');
 }
 
 unset($path);

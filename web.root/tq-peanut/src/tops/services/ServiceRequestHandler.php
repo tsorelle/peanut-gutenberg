@@ -62,8 +62,10 @@ class ServiceRequestHandler
     }
 
     public function getSettings() : void{
-        $configPath = TPath::getConfigPath();
-        include($configPath.'/settings.php');
+        $bootstrapDir = (defined('DIR_PNUT_BOOTSTRAP'))  ?
+            DIR_PNUT_BOOTSTRAP : // new peanut
+            TPath::getConfigPath(); // old peanut
+        include($bootstrapDir.'/settings.php');
     }
 
     public function buildPage(IHttpRequest $request = null) : void  {

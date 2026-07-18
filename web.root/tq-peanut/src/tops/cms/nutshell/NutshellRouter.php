@@ -52,7 +52,7 @@ class NutshellRouter extends TRouter
             $routeData['extraStyles'] = true;
         }
         // $routeData['themeIncludePath'] = DIR_ROOT."/application/themes/$theme/inc";
-        $routeData['themeIncludePath'] = DIR_APPLICATION."/themes/$theme/inc";
+        $routeData['themeIncludePath'] = PNUT_APPLICATION."/themes/$theme/inc";
         $user = TUser::getCurrent();
         $routeData['editorsignedin'] = $user->isAuthorized('editsongs');
         $routeData['signin'] = $user->isAuthenticated() ?
@@ -98,7 +98,7 @@ class NutshellRouter extends TRouter
 
 
         if (isset($routeData['view'])) {
-            $view = DIR_APPLICATION . '/content/pages/' . $routeData['view'] . '.php';
+            $view = PNUT_APPLICATION . '/content/pages/' . $routeData['view'] . '.php';
             // print "<p>Routing page to view $view</p>";
         } else if (isset($routeData['mvvm'])) {
             $viewModelKey = $routeData['mvvm'];
@@ -175,7 +175,7 @@ class NutshellRouter extends TRouter
 
             }
             if (isset($errorMessage)) {
-                $view = DIR_APPLICATION . '/content/pages/error-page.php';
+                $view = PNUT_APPLICATION . '/content/pages/error-page.php';
                 $routeData['errorMessage'] = $errorMessage;
                 unset($routeData['mvvm']);
                 unset($routeData['viewcontainerid']);
@@ -189,7 +189,7 @@ class NutshellRouter extends TRouter
         $routeData['view'] = $view;
         $routeData['sitemap'] = new SiteMap($uri);
         extract($routeData);
-        include DIR_APPLICATION . '/content/page.php';
+        include PNUT_APPLICATION . '/content/page.php';
 
     }
 
