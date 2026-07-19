@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<site-map>
+  <home title="Home" description="" roles="" uri=""/>
+  <news title="News" description="" roles="" uri="news"/>
+  <docs title="Documentation" description="" roles="" uri="peanut/docs"/>
+  <tests title="Tests" description="" roles="authenticated" uri="tests">
+    <simple-test title="Simple Test" description="" roles="" uri="tests/simple-test"/>
+    <editor-test title="Editor Test" description="" roles="" uri="editor-test"/>
+    <modal-test title="Modal Test" description="" roles="" uri="modal-test"/>
+    <components-test title="Components Test" description="" roles="" uri="components-test"/>
+    <pager-test title="Pager Test" description="" roles="" uri="pager-test"/>
+    <password-test title="Password Test" description="" roles="" uri="password-test"/>
+    <incremental-select-test title="Incremental Select Test" description="" roles="" uri="incremental-select-test"/>
+    <multi-select-test title="Multi-Select Test" description="" roles="" uri="multi-select-test"/>
+    <messages-test title="Messages Test" description="" roles="" uri="messages-test"/>
+  </tests>
+  <tools title="Tools" description="" roles="" uri="tools" icon="fa-solid fa-gear">
+    <email title="Email" description="" roles="administrator,email_manager" uri="tools/email">
+      <mailboxes title="Mailboxes" uri="tools/email/mailboxes" description="Maintain Mailboxes"/>
+      <send title="Send Messages" description="Mailing form" uri="tools/email/admin"/>
+    </email>
+    <admin title="Admin" description="" roles="" uri="tools/admin">
+      <permissions title="Permissions" uri="tools/admin/permissions" description="Manage permissions"/>
+      <authorizations title="Authorizations" uri="tools/admin/authorizations" description="Manage authorizations"/>
+      <scheduler title="Scheduler" uri="tools/admin/scheduler" description="Manage task scheduling"/>
+    </admin>
+  </tools>
+  <user title="User" description="" roles="" uri="site/user">
+    <subscriptions title="Subscriptions" description="" roles="" uri="user/subscriptions"/>
+  </user>
+</site-map>
