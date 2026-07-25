@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "ES6",
-    "target" : "ES2019",
+    "module" : "ESNext",
+    "target" : "ES2022",
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
@@ -9,7 +9,7 @@
   },
   "include": [
     "web.root/tq-peanut/application/peanut/**/*.ts",
-    "web.root/tq-peanut/pnut/**/*.ts"
+    "web.root/tq-peanut/pnut/**/*.ts",
   ],
   "exclude": [
     "node_modules",
