@@ -5,11 +5,12 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict" : false
   },
   "include": [
     "web.root/tq-peanut/application/peanut/**/*.ts",
-    "web.root/tq-peanut/pnut/**/*.ts",
+    "web.root/tq-peanut/pnut/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -19,8 +20,9 @@
     "web.root/wp-content",
     "web.root/wp-includes",
     "web.root/**/*.d.ts",
-    // "web.root/tq-peanut/typings",
-    "wp-block"
+    "wp-block",
+    "web.root/tq-peanut/typings/**/*",
+    "web.root/tq-peanut/application/assets/js/libraries"
   ],
   "watchOptions": {
     "watchFile": "useFsEvents",

@@ -23,6 +23,7 @@
       <permissions title="Permissions" uri="tools/admin/permissions" description="Manage permissions"/>
       <authorizations title="Authorizations" uri="tools/admin/authorizations" description="Manage authorizations"/>
       <scheduler title="Scheduler" uri="tools/admin/scheduler" description="Manage task scheduling"/>
+      <newwpuser title="New User" uri="tools/admin/newuser" description="Make new user"/>
     </admin>
   </tools>
   <user title="User" description="" roles="" uri="site/user">

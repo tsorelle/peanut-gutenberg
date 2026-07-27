@@ -1,0 +1,63 @@
+<div id="newwpuser-load-message"><span class="fa fa-spinner fa-pulse fa-2x" style="color:lightgrey"></span></div>
+<div id="newwpuser-view-container" class="row" style="display: none">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>New WordPress User</h3>
+                <form id="newwpuser-form">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username"
+                               data-bind="value: inputForm.username, css: { 'is-invalid': inputForm.usernameError }">
+                        <div class="invalid-feedback">
+                            Username is required.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email"
+                               data-bind="value: inputForm.email, css: { 'is-invalid': inputForm.emailError }">
+                        <div class="invalid-feedback">
+                            A valid email address is required.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName"
+                                   data-bind="value: inputForm.firstName, css: { 'is-invalid': inputForm.nameError }">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName"
+                                   data-bind="value: inputForm.lastName, css: { 'is-invalid': inputForm.nameError }">
+                            <div class="invalid-feedback">
+                                First or last name is required.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password"
+                               data-bind="value: inputForm.password">
+                        <div class="form-text text-muted">Optional. If omitted, WordPress will generate one.</div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-primary" data-bind="click: makeUser, disable: busy">
+                            <span data-bind="visible: !busy()">Create User</span>
+                            <span data-bind="visible: busy">Creating...</span>
+                        </button>
+                    </div>
+                </form>
+                <div id="results" data-bind="visible: newuserResponse.success" class="mt-4">
+                    <p> Sign-in link for <span data-bind="text: newuserResponse.newUser"></span></p>
+                    <p data-bind="text: newuserResponse.url"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

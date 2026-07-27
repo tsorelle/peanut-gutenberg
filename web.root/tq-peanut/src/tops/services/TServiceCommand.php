@@ -134,7 +134,7 @@ abstract class TServiceCommand {
 
     public function isAuthorized() {
 
-        if (empty($this->authorizations && empty($this->authorizedRoles))) {
+        if (empty($this->authorizations) && empty($this->authorizedRoles)) {
             return true;
         }
         /**
