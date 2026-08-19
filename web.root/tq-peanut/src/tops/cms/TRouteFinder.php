@@ -2,8 +2,6 @@
 
 namespace Tops\cms;
 
-use Tops\sys\TTracer;
-
 class TRouteFinder
 {
     public static ?array $matched = null;
@@ -43,7 +41,6 @@ class TRouteFinder
         return $matched;
     }
 
-
     public static function GetRoutes()
     {
         if (!isset(self::$routes)) {
@@ -58,9 +55,7 @@ class TRouteFinder
         self::GetRoutes();
         foreach (self::$routes as $matchPath => $values) {
             if (str_starts_with($uri, $matchPath)) {
-                TTracer::Print("Match found for path: $matchPath");
                 if ($uri != $matchPath && (!array_key_exists('args',$values))) {
-                    // print("<br>Skipping non-argument match\n");
                     continue;
                 }
                 $matchParts = explode('/', $matchPath);
@@ -68,12 +63,16 @@ class TRouteFinder
                 $pathParts = explode('/', $uri);
                 for ($i = 0; $i < $matchCount; $i++) {
                     if ($pathParts[$i] !== $matchParts[$i]) {
-                        TTracer::Print("Path mismatch at index $i: Expected {$matchParts[$i]}, got {$pathParts[$i]}");
                         return false;
                     }
                 }
                 $handler = $values['handler'] ?? null;
-
+/*                if ($handler === 'redirect') {
+                    $uri=  self::normalizeUri($values['target'] ?? '');
+                    header('Location: '.$uri);
+                    exit;
+                    // continue;
+                }*/
                 $configuration = $values;
                 $pathCount = count($pathParts);
                 $argCount = $pathCount - $matchCount;
@@ -85,7 +84,7 @@ class TRouteFinder
                 $configuration['path'] = $matchPath;
                 $configuration['argValues'] = $argValues ?? [];
                 self::$matched = $configuration;
-                TTracer::Print("Match found for path: $matchPath",self::$matched);
+
                 return true;
             }
         }

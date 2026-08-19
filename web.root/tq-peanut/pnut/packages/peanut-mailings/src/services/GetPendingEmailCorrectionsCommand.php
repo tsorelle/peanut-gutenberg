@@ -8,9 +8,7 @@
 
 namespace Peanut\PeanutMailings\services;
 
-
-use Peanut\PeanutMailings\db\DirectoryManager;
-use Peanut\PeanutMailings\db\EmailManager;
+use Peanut\PeanutMailings\db\EmailCorrectionsManager;
 use Tops\services\TServiceCommand;
 use Tops\sys\TLanguage;
 
@@ -42,7 +40,7 @@ class GetPendingEmailCorrectionsCommand extends TServiceCommand
     protected function run()
     {
         $response = new \stdClass();
-        $manager = new EmailManager();
+        $manager = new EmailCorrectionsManager();
         $response->corrections = $manager->getUnresolvedEmailProblems();
         $response->translations = TLanguage::getTranslations(array(
             'error-invalid-emails',

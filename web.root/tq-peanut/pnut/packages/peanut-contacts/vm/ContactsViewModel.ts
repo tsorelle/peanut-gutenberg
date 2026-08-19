@@ -1,6 +1,7 @@
 /// <reference path="../../../../pnut/core/ViewModelBase.ts" />
 /// <reference path='../../../../typings/knockout/index.d.ts' />
 /// <reference path='../../../../pnut/core/Peanut.d.ts' />
+/// <reference path='../js/mailings.d.ts'>
 
 namespace PeanutContacts {
 

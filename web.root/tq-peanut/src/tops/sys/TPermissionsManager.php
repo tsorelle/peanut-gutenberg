@@ -29,7 +29,6 @@ abstract class TPermissionsManager
     const editContentPermissionsName = 'Edit content';
     const calendarAdminRoleName = 'Calendar Administrator';
     const calendarAdminPermissionName = 'Manage calendar';
-
     const committeeManagerRoleName = 'Committee Manager';
     const manageCommitteesPermissionsName = 'Manage committees';
     const documentAdminRoleName = 'Document Manager';

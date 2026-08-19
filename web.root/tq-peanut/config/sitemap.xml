@@ -26,7 +26,7 @@
       <newwpuser title="New User" uri="tools/admin/newuser" description="Make new user"/>
     </admin>
   </tools>
-  <user title="User" description="" roles="" uri="site/user">
+  <user title="User" description="" roles="authenticated" uri="site/user">
     <subscriptions title="Subscriptions" description="" roles="" uri="user/subscriptions"/>
   </user>
 </site-map>

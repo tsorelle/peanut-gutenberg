@@ -13,7 +13,8 @@
 
     if (!empty($pageTitle)) {
         print "<div id='page-title-block'>\n";
-        printf('<h1 id="page-title">%s</h1>', $pageTitle) . "\n";
+        // todo: conflicts with page title in content area. resolve
+        // printf('<h1 id="page-title">%s</h1>', $pagetitle) . "\n";
         print "</div>\n";
     }
 

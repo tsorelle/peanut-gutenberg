@@ -1,21 +1,16 @@
-<?php 
-/** 
- * Created by /tools/create-model.php 
+<?php
+/**
+ * Created by /tools/create-model.php
  * Time:  2022-05-11 14:51:59
- */ 
+ */
 namespace Peanut\contacts\db\model\repository;
 
 use \PDO;
-use PDOStatement;
 use Peanut\contacts\db\model\entity\Contact;
-use Peanut\PeanutMailings\sys\ISubscriptionManager;
 use Tops\db\IBasicContact;
-use Tops\db\IContactsRepository;
 use Tops\db\IProfilesRepository;
-use Tops\db\TDatabase;
-use \Tops\db\TEntityRepository;
 
-class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfilesRepository, ISubscriptionManager, IContactsRepository
+class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfilesRepository
 {
     protected function getTableName() {
         return 'pnut_contacts';
@@ -242,7 +237,8 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
         return $result === false ? [] : $result;
     }
 
-    public function getEmailSubscribersList($listId) {
+    // todo: is it used? refactor to subscription manager
+/*    public function getEmailSubscribersList($listId) {
         $sql  = "SELECT c.id, c.`fullname`, IFNULL(c.`email`, 'error no email') AS emailAddress,".
         ' IF(c.`email` IS NULL,1,0) AS noEmail,0 as unsubscribe'.
         ' FROM `qnut_email_subscriptions` s'.
@@ -251,8 +247,10 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
         ' ORDER BY IFNULL(c.`sortkey`,c.`fullname`)';
         $stmt = $this->executeStatement($sql,[$listId]);
         return $stmt->fetchAll(pdo::FETCH_OBJ);
-    }
-    public function removeEmailSubscriptions($listId, array $contactList) {
+    }*/
+
+    // todo: is it used? refactor to subscription manager
+/*    public function removeEmailSubscriptions($listId, array $contactList) {
         if (count($contactList) == 0) {
             return false;
         }
@@ -260,16 +258,17 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
             '('. implode(",",$contactList). ')';
         $this->executeStatement($sql,[$listId]);
         return true;
-    }
+    }*/
 
-    public function getUid($subscriberId): string
+    // todo: is it used? add to IBasic contact
+/*    public function getUid($subscriberId): string
     {
         $contact = $this->get($subscriberId);
         if ($contact) {
             return $contact->uid;
         }
         return '';
-    }
+    }*/
 
     public function queueEmailRecipients($messageId, $listId): int
     {
@@ -291,7 +290,9 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
      * @param array $recipients
      * @return int
      */
-    public function queueEmailRecipientList($messageId, array $recipients): int
+
+    // todo: is it used? refactor to subscription manager
+/*/*    public function queueEmailRecipientList($messageId, array $recipients): int
     {
         $count = 0;
         $sql =
@@ -306,9 +307,9 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
             $count += $stmt->rowCount();
         }
         return $count;
-    }
+    }*/
 
-    public function unsubscribeByUid($uid,$listId) {
+    /*public function unsubscribeByUid($uid,$listId) : bool | \stdClass {
         $findQuery = 'SELECT p.fullname as personName, l.name AS listName '.
             'FROM qnut_email_subscriptions s '.
             'JOIN pnut_contacts p ON s.personId = p.id '.
@@ -326,7 +327,7 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
 
         $this->executeStatement($deleteQuery,[$uid,$listId]);
         return $result;
-    }
+    }*/
 
     public function getAllByEmail($email): array
     {
@@ -336,5 +337,17 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
     public function getByUid($uid): IBasicContact
     {
         return $this->getSingleEntity('uid = ?',[$uid]);
+    }
+
+    public function getContactDefinitions(): array
+    {
+        return [
+            'table' => $this->getTableName(),
+            'entity' => $this->getClassName()
+        ];
+    }
+    public function getEntityById($id): IBasicContact
+    {
+        return $this->getEntityById($id);
     }
 }

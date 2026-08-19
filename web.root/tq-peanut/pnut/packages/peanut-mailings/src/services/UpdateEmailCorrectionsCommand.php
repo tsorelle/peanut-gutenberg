@@ -8,8 +8,6 @@
 
 namespace Peanut\PeanutMailings\services;
 
-
-use Peanut\PeanutMailings\db\EmailManager;
 use Tops\mail\TEmailValidator;
 use Tops\services\TServiceCommand;
 use Tops\sys\TPermissionsManager;

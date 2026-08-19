@@ -42,6 +42,7 @@ function initializePeanut() {
         $_SERVER['DOCUMENT_ROOT'] :
         __DIR__;
 
+    // print "<h1>peanutRoot: $peanutRoot\n</h1>";
     require_once  "$peanutRoot/tq-peanut/bootstrap/definitions.php";
     require_once  DIR_PNUT_BOOTSTRAP. '/peanut-bootstrap.php';
 

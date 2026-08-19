@@ -49,6 +49,7 @@ namespace Peanut {
     export class PeanutLoader {
         private static loaded = [];
         private static application : IPeanutClient;
+
         private static getDependencies() {
             return [];
         }

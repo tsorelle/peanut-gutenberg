@@ -8,9 +8,9 @@
 
 namespace Peanut\PeanutMailings\services;
 
-
-use Peanut\PeanutMailings\db\DirectoryManager;
+use Peanut\PeanutMailings\sys\SubscriptionManager;
 use Tops\services\TServiceCommand;
+use Tops\sys\TConfiguration;
 
 /**
  * Class UpdatePersonSubscriptionsCommand
@@ -35,24 +35,31 @@ class UpdatePersonSubscriptionsCommand extends TServiceCommand
             $this->addErrorMessage('service-invalid-request');
             return;
         }
-        
+
         if (isset($request->emailSubscriptions)) {
-            $personId = isset($request->personId) ? $request->personId : null;
+            $personId = $request->personId ?? null;
             if ($personId === null) {
                 $this->addErrorMessage('service-error-no-personid');
                 return;
             }
         }
-        if (isset($request->postalSubscriptions)) {
-            $addressId = isset($request->addressId) ? $request->addressId : null;
-            if ($addressId === null) {
-                $this->addErrorMessage('service-error-no-addressid');
-                return;
-            }
-        }
-        $manager = new DirectoryManager();
+
+        $manager = SubscriptionManager::getInstance();
         $manager->updateEmailSubscriptions($personId,$request->emailSubscriptions);
-        $manager->updatePostalSubscriptions($addressId,$request->postalSubscriptions);
+
+        $postalSubscriptionsSupported = TConfiguration::getBoolean('postalSubscriptions','features');
+        if ($postalSubscriptionsSupported) {
+            if (isset($request->postalSubscriptions)) {
+                $addressId = isset($request->addressId) ? $request->addressId : null;
+                if ($addressId === null) {
+                    $this->addErrorMessage('service-error-no-addressid');
+                    return;
+                }
+            }
+            $manager->updatePostalSubscriptions($addressId,$request->postalSubscriptions);
+        }
+        // todo: plan notification strategy
+        /*
         if (isset($request->notifications)) {
             if ($request->notifications == 0) {
                 $manager->disableNotifications($personId);
@@ -61,6 +68,7 @@ class UpdatePersonSubscriptionsCommand extends TServiceCommand
                 $manager->enableNotifications($personId);
             }
         }
+        */
         $this->addInfoMessage('service-message-subscriptions-updated');
     }
 }

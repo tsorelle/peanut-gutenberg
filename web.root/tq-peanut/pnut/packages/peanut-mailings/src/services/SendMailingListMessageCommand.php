@@ -45,13 +45,12 @@ class SendMailingListMessageCommand extends TServiceCommand
         if (empty($request->testAddress) || $request->testAddress == $user->getEmail()) {
             // get UID for current user
             $submanager = SubscriptionManager::getInstance();
-            $recipient->personId = $submanager->getUid($user->getId());
-/*          Example implementation
-            $person = $dirManager->getPersonByAccountId($user->getId());
-            if ($person) {
-                return $person->uid;
+            $person = $submanager->getEmailSubscriberByAccount($user->getId());
+            if (!$person){
+                $this->addErrorMessage("Cannot send test message. No person found for account ID.");
+                return;
             }
-*/
+            $recipient->personId = $person->getUid();
         }
         else {
             // set test values

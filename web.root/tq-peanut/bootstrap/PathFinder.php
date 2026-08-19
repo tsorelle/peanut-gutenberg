@@ -37,7 +37,6 @@ class PathFinder
         return self::stripDriveLetter($path);
     }
 
-
     /**
      *  Convert a file system path to a URL (protocol omitted)
      * @param $path
@@ -64,7 +63,6 @@ class PathFinder
         }
         return false;
     }
-
     /**
      * @throws \Exception
      */

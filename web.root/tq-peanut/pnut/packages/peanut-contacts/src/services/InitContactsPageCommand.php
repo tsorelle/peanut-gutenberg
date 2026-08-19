@@ -4,6 +4,7 @@ namespace Peanut\contacts\services;
 
 use Peanut\contacts\db\ContactsManager;
 use Peanut\contacts\db\model\entity\Contact;
+use Peanut\PeanutMailings\sys\SubscriptionManager;
 use Peanut\users\AccountManager;
 
 class InitContactsPageCommand extends \Tops\services\TServiceCommand
@@ -36,8 +37,14 @@ class InitContactsPageCommand extends \Tops\services\TServiceCommand
 
     protected function run()
     {
+        $response = new \stdClass();
         $manager = new ContactsManager();
-        $response = $manager->getContactsAndLookups();
+        $response->contacts = $manager->getContactList();
+        $response->listingTypes = $manager->getListingTypes();
+
+        $subscriptionManager = SubscriptionManager::getInstance();
+        $response->emailLists = $subscriptionManager->getEmailSubscriptionList();
+
         $accounts = new AccountManager();
         $response->roles = $accounts->getRoles();
         $this->setReturnValue($response);

@@ -3,6 +3,7 @@
 namespace Peanut\contacts\services;
 
 use Peanut\contacts\db\ContactsManager;
+use Peanut\PeanutMailings\sys\SubscriptionManager;
 
 class GetContactDetailsCommand extends \Tops\services\TServiceCommand
 {
@@ -14,9 +15,9 @@ class GetContactDetailsCommand extends \Tops\services\TServiceCommand
             $this->addErrorMessage('Invalid contact id');
             return;
         }
-        $manager = new ContactsManager();
         $response = new \stdClass();
-        $response->subscriptions = $manager->getContactSubscriptions($id);
+        $subscriptionManager = SubscriptionManager::getInstance();
+        $response->subscriptions = $subscriptionManager->getEmailSubscriptions($id);
         $this->setReturnValue($response);
     }
 }

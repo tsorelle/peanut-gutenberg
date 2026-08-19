@@ -87,7 +87,6 @@ class SiteMap
             return true;
         }
         $roles = explode(',',$roles);
-
         if ($this->user->isAuthenticated()) {
             foreach ($roles as $role) {
                 if ($role=='authenticated' || $this->user->isMemberOf($role)) {

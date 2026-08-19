@@ -24,7 +24,10 @@ class TWebSite
                 $protocol = 'http';
             }
         }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'];
+
+        $host = $_SERVER['HTTP_HOST'] ?? TConfiguration::getValue('host','site');
+
+        return $protocol . "://" . $host;
     }
 
     public static function GetClientIp()

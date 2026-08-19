@@ -5,8 +5,7 @@ namespace Tops\services;
 use Peanut\contacts\db\model\repository\ContactsRepository;
 use Peanut\QnutDirectory\db\model\PersonsRepository;
 use Tops\db\IBasicContact;
-use Tops\db\IContactsRepository;
-use Tops\db\IProfilesRepository;
+use Tops\sys\IContactManager;
 use Tops\sys\TObjectContainer;
 use Tops\sys\TUser;
 
@@ -387,14 +386,14 @@ class TFormSecurity
             $authenticated ? 'authenticated' : 'ANONYMOUS');
 
         /**
-         * @var $repository IContactsRepository
+         * @var $contactsManager IContactManager
          */
-        $repository = TObjectContainer::Get('contacts.repository');
+        $contactsManager = TObjectContainer::Get('contacts.manager');
 
         /**
          * @var $persons IBasicContact[]
          */
-        $persons = $repository->getAllByEmail($message->fromAddress);
+        $persons = $contactsManager->getAllByEmail($message->fromAddress);
 
         $registered = '';
         if (!empty($persons)) {

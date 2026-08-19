@@ -17,8 +17,8 @@
                     <label class="control-label" for="mailingList" ><translate params="code:'mailing-label-list',translator:self"></translate></label>
                     <span class="error" data-bind="visible: mailingListSelectError, text: mailingListSelectError"></span>
                     <select class="form-control"  id="mailingList" data-bind="options: mailingListLookup,
-                           optionsText: 'name',
-                           value: selectedMailingList"></select>
+                        optionsText: 'name',
+                        value: selectedMailingList"></select>
                 </div>
 
                 <div class="form-group" data-bind="css: {'has-error': subjectError}">
@@ -60,7 +60,7 @@
 
                 <div class="form-group" style="margin-top: 1em">
                     <button class="btn btn-primary" data-bind="click:sendMessage">
-                        <translate params="code:'mailing-send-mailing',translator:self"></translate> <span class="fa fa-paper-plane-o" aria-hidden="true"></span>
+                        <translate params="code:'mailing-send-mailing',translator:self"></translate> <i class="fa-regular fa-paper-plane"></i>
                     </button>
                 </div>
 
@@ -260,12 +260,12 @@
                                 <input id="cansubscribe-check" type="checkbox" data-bind="checked:listEditForm.cansubscribe"/>
                                 <label for="cansubscribe-check"  class="control-label" style="font-weight: normal">
                                     <translate params="code:'mail-label-cansubscribe',translator:self"></translate> </label>
-                            </div>                            
+                            </div>
                             <div class="form-group">
                                 <input id="adminonly-check" type="checkbox" data-bind="checked:listEditForm.adminonly"/>
                                 <label for="adminonly-check"  class="control-label" style="font-weight: normal">
                                     <translate params="code:'mail-label-adminonly',translator:self"></translate> </label>
-                            </div>                            
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
