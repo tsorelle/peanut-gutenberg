@@ -15,7 +15,7 @@ require_once DIR_ROOT . '/wp-load.php';
 // definitions.php uses DIR_ROOT if defined
 require_once DIR_ROOT . '/tq-peanut/bootstrap/definitions.php';
 
-$peanutBootstrap = DIR_APPLICATION . '/config/peanut-bootstrap.php';
+$peanutBootstrap = DIR_ROOT . '/tq-peanut/config/peanut-bootstrap.php';
 if (file_exists($peanutBootstrap)) {
     require_once $peanutBootstrap;
     $response = \Peanut\Bootstrap::initialize(DIR_PEANUT_ROOT);

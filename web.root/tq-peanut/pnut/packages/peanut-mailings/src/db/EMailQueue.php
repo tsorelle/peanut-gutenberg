@@ -25,7 +25,9 @@ use Tops\services\TProcessManager;
 use Tops\sys\IUser;
 use Tops\sys\TConfiguration;
 use Tops\sys\TDates;
+use Tops\sys\TSession;
 use Tops\sys\TTemplateManager;
+use Tops\sys\TUser;
 use Tops\sys\TWebSite;
 
 class EMailQueue
@@ -66,8 +68,36 @@ class EMailQueue
      * @var TProcessManager
      */
     private $process;
-    public static function QueueMessageList($messageDto, $username, array $recipients=null) {
+
+    public static function InsertMessage($messageDto, EmailList $list , $username=null) : EmailMessage
+    {
+        if ($username === null ) {
+            $username = TUser::getCurrent()->getUserName();
+        }
+        $messageDto->tags = $list->getCode();
+        $messageDto->sender = $list->mailBox;
         $message = EmailMessage::Create($messageDto, $username);
+        $message->id = (new EmailMessagesRepository())->insert($message);
+        return $message;
+    }
+    public static function QueueMessageList($messageDto, $username, array $recipients=null) {
+
+        /**
+         * @var $list EmailList
+         */
+        $list = (new EmailListsRepository())->get($messageDto->listId);
+        if (empty($list)) {
+            return -1;
+        }
+
+        $messageDto->tags = $list->getCode();
+        $messageDto->sender = $list->mailBox;
+        $message = EmailMessage::Create($messageDto, $username);
+
+        $messageId = (new EmailMessagesRepository())->insert($message);
+
+
+
         return (self::getMessagesRepository())->queueMessageList($message,$recipients);
     }
 
@@ -162,7 +192,7 @@ class EMailQueue
             $this->process->log($event,$message,$messageType,$detail);
         }
     }
-    
+
     private function logError($message,$event='mail process error',$detail=null) {
         if (isset($this->process)) {
             $this->process->logError($event,$message,$detail);

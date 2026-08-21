@@ -21,7 +21,7 @@ use Tops\cms\wordpress\WordpressRouter;
 use Tops\sys\TUser;
 
 function initializePeanut() {
-    if (class_exists('Tops\sys\TSession')) {
+    if (class_exists('Tops\sys\TSession',false)) {
         return true; // already initialized
     }
     // error_log("initializePeanut");
@@ -204,6 +204,23 @@ function peanut_save_block($post_id, $post) {
     $repository->removeOrphanBlocks($post_id, $peanutBlocks);
 
 }
+
+add_action( 'publish_post', function( $post_id, $post ) {
+    // Fires whether it came from pending review or admin publishing directly
+    \Peanut\WordpressTools\WpNotificationManager::AddPost($post_id);
+}, 10, 2 );
+
+add_action( 'comment_post', function( $comment_id, $comment_approved, $comment_data ) {
+    if ( $comment_approved === 1 ) {
+        // Immediately visible — no moderation needed (e.g. trusted/logged-in commenter)
+        \Peanut\WordpressTools\WpNotificationManager::AddComment($comment_id);
+    }
+}, 10, 3 );
+
+add_action( 'comment_unapproved_to_approved', function( $comment ) {
+    \Peanut\WordpressTools\WpNotificationManager::AddComment($comment->comment_ID);
+} );
+
 
 // todo: see if this is still needed, if so add from legacy project
 // add_filter('the_content','peanut_content');

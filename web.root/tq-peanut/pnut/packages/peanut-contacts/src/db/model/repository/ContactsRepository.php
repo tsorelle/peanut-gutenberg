@@ -291,8 +291,7 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
      * @return int
      */
 
-    // todo: is it used? refactor to subscription manager
-/*/*    public function queueEmailRecipientList($messageId, array $recipients): int
+    public function queueEmailRecipientList($messageId, array $recipients): int
     {
         $count = 0;
         $sql =
@@ -307,7 +306,7 @@ class ContactsRepository extends \Tops\db\TEntityRepository  implements IProfile
             $count += $stmt->rowCount();
         }
         return $count;
-    }*/
+    }
 
     /*public function unsubscribeByUid($uid,$listId) : bool | \stdClass {
         $findQuery = 'SELECT p.fullname as personName, l.name AS listName '.

@@ -100,14 +100,32 @@ class SendMailingListMessageCommand extends TServiceCommand
             $this->sendTestMessage($request);
         }
         else {
-            $queue = new EMailQueue();
-            $queueResult = EMailQueue::QueueMessageList($request, $this->getUser()->getUserName());
+            $subscriptionManager = new SubscriptionManager();
+            $messageRequest = $subscriptionManager->createMessageListRequest(
+                $request->listId,
+                $request->subject,
+                $request->messageText,
+                $request->contentType,
+                $request->template);
+
+            if ($messageRequest === null) {
+                $this->addErrorMessage('Invalid mailing list indentifier.');
+                return;
+            }
+
+            $queueResult = $subscriptionManager->queueEmailMessage($messageRequest);
+            if ($queueResult->errorMessage !== null) {
+                $this->addErrorMessage($queueResult->errorMessage);
+                return;
+            }
+
+            // $queueResult = EMailQueue::QueueMessageList($request, $this->getUser()->getUserName());
             $queueMailings = TConfiguration::getBoolean('queuemailings', 'mail', true);
             if ($queueMailings) {
                 $count = $queueResult->count;
                 $action = 'submitted to message queue';
             } else {
-                $count = EMailQueue::Send($queueResult->messageId,$queue);
+                $count = EMailQueue::Send($queueResult->messageId);
                 $action = 'sent';
             }
             $plural = $count > 1 ? 's were' : ' was';

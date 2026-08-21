@@ -6,8 +6,8 @@
  * Time: 8:02 AM
  */
 $projectFileRoot =   str_replace('\\','/', realpath(__DIR__.'/../../web.root')).'/';
-include_once $projectFileRoot.'tq-peanut/bootstrap/definitions.php';
-include_once $projectFileRoot.'tq-peanut/application/config/peanut-bootstrap.php';
+require $projectFileRoot.'tq-peanut/bootstrap/definitions.php';
+require $projectFileRoot.'tq-peanut/bootstrap/peanut-bootstrap.php';
 \Peanut\Bootstrap::initialize();
 $inifile = __DIR__."/modelbuilder-cms.ini";
 $config = parse_ini_file(__DIR__."/modelbuilder-cms.ini",true);
