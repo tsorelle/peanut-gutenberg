@@ -9,6 +9,8 @@
 namespace Tops\sys;
 
 
+use Tops\db\IBasicContact;
+
 interface IUserAccountManager
 {
     const duplicateUsernameError = 'account-error-duplicate-name';
@@ -40,5 +42,6 @@ interface IUserAccountManager
 
     public function getLoginUrl();
 
+    public function getRoles();
 
 }

@@ -6,6 +6,7 @@ use Peanut\contacts\db\ContactsManager;
 use Peanut\contacts\db\model\entity\Contact;
 use Peanut\PeanutMailings\sys\SubscriptionManager;
 use Peanut\users\AccountManager;
+use Tops\sys\TObjectContainer;
 
 class InitContactsPageCommand extends \Tops\services\TServiceCommand
 {
@@ -45,7 +46,10 @@ class InitContactsPageCommand extends \Tops\services\TServiceCommand
         $subscriptionManager = SubscriptionManager::getInstance();
         $response->emailLists = $subscriptionManager->getEmailSubscriptionList();
 
-        $accounts = new AccountManager();
+        $accounts = TObjectContainer::Get('account.manager');
+        if (empty($accounts)) {
+            $this->addErrorMessage('Account manager not defined');
+        }
         $response->roles = $accounts->getRoles();
         $this->setReturnValue($response);
     }

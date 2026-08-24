@@ -1,8 +1,8 @@
-<?php 
-/** 
- * Created by /tools/create-model.php 
+<?php
+/**
+ * Created by /tools/create-model.php
  * Time:  2022-05-09 21:42:28
- */ 
+ */
 
 namespace Peanut\users\db\model\repository;
 
@@ -16,6 +16,14 @@ class RolesRepository extends \Tops\db\TEntityRepository
     public function getRoleByName($roleName)
     {
         return $this->getSingleEntity('name = ?',$roleName);
+    }
+
+    public function getRolesLookup()
+    {
+        $sql = 'SELECT   `id`,  `name`,  `name` AS `code`,  `description`,  `active` '.
+        'FROM   `pnut_roles` WHERE `active` = 1';
+        $stmt = $this->executeStatement($sql);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     protected function getTableName() {

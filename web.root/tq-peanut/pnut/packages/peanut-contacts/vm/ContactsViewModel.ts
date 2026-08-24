@@ -51,8 +51,10 @@ namespace PeanutContacts {
             let result = {
                 username: this.username().trim(),
                 password: this.password().trim(),
-                roles : this.rolesController.getValues(),
-                contactId: null
+                roles : this.rolesController.getCodes(),
+                contactId: null,
+                fullName: null,
+                email: null
             }
             if (!result.username) {
                 this.errorMessage('Username is required');
@@ -231,13 +233,20 @@ namespace PeanutContacts {
             if (!request) {
                 return;
             }
+            request.email = me.selectedContact.email;
             request.contactId = me.selectedContact.id;
+            request.fullName = me.selectedContact.fullname;
+
             me.pageview('wait');
             me.services.executeService('Peanut.contacts::CreateContactAccount',request,
                 function(serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         me.selectedContact.accountId = serviceResponse.Value;
+                        me.contactForm.accountId(serviceResponse.Value);
                         me.pageview('view');
+                    }
+                    else {
+                        me.pageview('error');
                     }
                 }
             ).fail(function () {

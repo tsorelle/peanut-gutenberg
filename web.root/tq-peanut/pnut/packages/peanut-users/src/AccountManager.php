@@ -10,12 +10,16 @@ use Peanut\users\db\model\repository\RolesRepository;
 use Peanut\users\db\model\repository\UserRolesAssociation;
 use Peanut\users\db\model\repository\UsersessionsRepository;
 use Peanut\users\db\model\repository\UsersRepository;
+use Tops\db\IBasicContact;
 use Tops\db\IProfilesRepository;
+use Tops\sys\IContactManager;
+use Tops\sys\IUser;
 use Tops\sys\IUserAccountManager;
 use Tops\sys\TAddUserAccountResponse;
 use Tops\sys\TConfiguration;
 use Tops\sys\TObjectContainer;
 use Tops\sys\TSession;
+use Tops\sys\TUser;
 
 //todo: test profile and contact related functions
 
@@ -393,7 +397,7 @@ class AccountManager implements IUserAccountManager
      * @return Role[]|false
      */
     public function getRoles() {
-        return $this->getRolesRepository()->getAll();
+        return $this->getRolesRepository()->getRolesLookup();
     }
 
     public function getUserRoleNames($usr) {
@@ -583,6 +587,5 @@ class AccountManager implements IUserAccountManager
         }
         return $this->getUserRolesAssociation()->getRightValues($id);
     }
-
 
 }

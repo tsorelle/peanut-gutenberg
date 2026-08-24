@@ -40,13 +40,33 @@ namespace Peanut {
                 me.selected([])
             }
         }
-        
+
         public getValues() {
             let me = this;
             let selection = me.selected();
             let result = [];
             for(let i=0;i<selection.length; i++) {
                 result.push(selection[i].id)
+            }
+            return result;
+        }
+
+        public getNames(): string[] {
+            let me = this;
+            let selection = me.selected();
+            let result = [];
+            for(let i=0;i<selection.length; i++) {
+                result.push(selection[i].name)
+            }
+            return result;
+        }
+
+        public getCodes(): string[] {
+            let me = this;
+            let selection = me.selected();
+            let result = [];
+            for(let i=0;i<selection.length; i++) {
+                result.push(selection[i].code)
             }
             return result;
         }

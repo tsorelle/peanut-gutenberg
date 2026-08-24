@@ -20,6 +20,7 @@
       <send title="Send Messages" description="Mailing form" uri="tools/email/admin"/>
     </email>
     <admin title="Admin" description="" roles="" uri="tools/admin">
+      <contacts title="Contact Management" description="Manage contacts" />
       <permissions title="Permissions" uri="tools/admin/permissions" description="Manage permissions"/>
       <authorizations title="Authorizations" uri="tools/admin/authorizations" description="Manage authorizations"/>
       <scheduler title="Scheduler" uri="tools/admin/scheduler" description="Manage task scheduling"/>

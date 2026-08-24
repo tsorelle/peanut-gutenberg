@@ -100,6 +100,7 @@ class SendMailingListMessageCommand extends TServiceCommand
             $this->sendTestMessage($request);
         }
         else {
+
             $subscriptionManager = new SubscriptionManager();
             $messageRequest = $subscriptionManager->createMessageListRequest(
                 $request->listId,
@@ -107,12 +108,10 @@ class SendMailingListMessageCommand extends TServiceCommand
                 $request->messageText,
                 $request->contentType,
                 $request->template);
-
             if ($messageRequest === null) {
                 $this->addErrorMessage('Invalid mailing list indentifier.');
                 return;
             }
-
             $queueResult = $subscriptionManager->queueEmailMessage($messageRequest);
             if ($queueResult->errorMessage !== null) {
                 $this->addErrorMessage($queueResult->errorMessage);

@@ -91,7 +91,8 @@ class TPath
                 $configDir = DIR_CONFIGURATION;
             }
             else {
-                $configLocation = 'application/config';
+                $configLocation = 'tq-peanut/config';
+                // $configLocation = 'application/config';
                 $configDir = self::$fileRoot.self::fixSlashes($configLocation);
             }
             if (!is_dir($configDir)) {

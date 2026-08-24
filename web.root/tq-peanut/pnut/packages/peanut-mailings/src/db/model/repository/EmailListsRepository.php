@@ -8,6 +8,7 @@ namespace Peanut\PeanutMailings\db\model\repository;
 
 use \PDO;
 use PDOStatement;
+use Peanut\PeanutMailings\db\model\entity\EmailList;
 use Tops\db\TDatabase;
 use \Tops\db\TNamedEntitiesRepository;
 
@@ -23,6 +24,10 @@ class EmailListsRepository extends \Tops\db\TNamedEntitiesRepository
 
     protected function getClassName() {
         return 'Peanut\PeanutMailings\db\model\entity\EmailList';
+    }
+    public function getListByCode(string $code) : EmailList | false
+    {
+        return $this->getSingleEntity('code = ?',[$code]);
     }
 
     public function getEmailList(string $code) {
@@ -67,5 +72,6 @@ class EmailListsRepository extends \Tops\db\TNamedEntitiesRepository
             'changedon' => PDO::PARAM_STR,
             'active' => PDO::PARAM_STR);
     }
+
 
 }
