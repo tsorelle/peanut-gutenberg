@@ -21,7 +21,7 @@ use Tops\sys\TObjectContainer;
 use Tops\sys\TSession;
 use Tops\sys\TUser;
 
-//todo: test profile and contact related functions
+//todo: test profile and contact-related functions
 
 class AccountManager implements IUserAccountManager
 {

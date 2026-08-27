@@ -21,11 +21,11 @@ use Tops\cms\wordpress\WordpressRouter;
 use Tops\sys\TUser;
 
 function initializePeanut() {
-    if (class_exists('Tops\sys\TSession',false)) {
+    if (class_exists('Peanut\Bootstrap',false)) {
         return true; // already initialized
     }
     // error_log("initializePeanut");
-    if (!empty($_SERVER['REQUEST_URI'])) {
+/*    if (!empty($_SERVER['REQUEST_URI'])) {
         $reqExtension = strtolower( pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION));
         $p = strpos($reqExtension, '?');
         if ($p !== false) {
@@ -33,9 +33,18 @@ function initializePeanut() {
         }
         if (!(empty($reqExtension) || $reqExtension == 'js' || $reqExtension == 'php')) {
             // skip peanut initializations for images etc.
-            return;
+            return true;
+        }
+    }*/
+    if (!empty($_SERVER['REQUEST_URI'])) {
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '';
+        $reqExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!(empty($reqExtension) || $reqExtension === 'js' || $reqExtension === 'php')) {
+            // skip peanut initializations for images etc.
+            return true;
         }
     }
+
     $peanutSystemLocation = 'docroot';// $peanutSystemLocation = 'module';
 
     $peanutRoot = $peanutSystemLocation == 'docroot' ?
@@ -47,6 +56,7 @@ function initializePeanut() {
     require_once  DIR_PNUT_BOOTSTRAP. '/peanut-bootstrap.php';
 
     \Peanut\Bootstrap::initialize();
+//    $test = class_exists('Peanut\Bootstrap',false);
     return class_exists('Tops\sys\TSession');
 }
 
@@ -275,22 +285,48 @@ add_action('wp_update_nav_menu', function($menu_id) {
         if ($done) {
             return;
         }
-        $menu = wp_get_nav_menu_object($menu_id);
-        $name = \Tops\sys\TConfiguration::getValue('menu-name','wordpress','main-menu');
-        if ($menu->name === $name) {
-            $done = true;
-            $builder= new \Tops\cms\wordpress\WordPressSiteMapBuilder();
-            $result = $builder->build();
-            $ok = $result->success ?? false;
-            if ($ok) {
-                error_log('Sitemap builder succeeded. File: '.$result->outputFile);
+        if (class_exists('\Tops\cms\wordpress\WordPressSiteMapBuilder')) {
+            $menu = wp_get_nav_menu_object($menu_id);
+            $name = \Tops\sys\TConfiguration::getValue('menu-name','wordpress','main-menu');
+            if ($menu->name === $name) {
+                $done = true;
+                $builder= new \Tops\cms\wordpress\WordPressSiteMapBuilder();
+                $result = $builder->build();
+                $ok = $result->success ?? false;
+                if ($ok) {
+                    error_log('Sitemap builder succeeded. File: '.$result->outputFile);
+                }
+                else {
+                    $errors = $result->errors ?? [];
+                    error_log('Sitemap builder failed: '.implode(', ', $errors));
+                }
             }
-            else {
-                $errors = $result->errors ?? [];
-                error_log('Sitemap builder failed: '.implode(', ', $errors));
-            }
+
         }
     }
 });
 
+add_action( 'user_register', function( $user_id ) {
+    if (class_exists('Tops\sys\TCmsEvents')) {    // $user_id is the newly created user's ID
+        $user = get_userdata( $user_id );
+        \Tops\sys\TCmsEvents::Handle('user', \Tops\sys\TSystemEvents::ON_USER_UPDATE,$user);
+        // error_log( 'New user registered: ' . $user->user_login );
+    }
+}, 10, 1 );
+
+add_action( 'profile_update', function( $user_id, $old_user_data ) {
+    if (class_exists('Tops\sys\TCmsEvents')) {
+        $new_user = get_userdata($user_id);
+        \Tops\sys\TCmsEvents::Handle('user', \Tops\sys\TSystemEvents::ON_USER_UPDATE,$new_user);
+        // Compare $old_user_data (WP_User object, pre-update) to $new_user
+        // error_log('User updated: ' . $new_user->user_login);
+    }
+}, 10, 2 );
+
+add_action( 'deleted_user', function( $user_id, $reassign, $user ) {
+    if (class_exists('Tops\sys\TCmsEvents')) {
+        \Tops\sys\TCmsEvents::Handle('user', \Tops\sys\TSystemEvents::ON_USER_DELETE,$user_id);
+        // error_log( 'User deleted: ID ' . $user_id );
+    }
+}, 10, 3 );
 

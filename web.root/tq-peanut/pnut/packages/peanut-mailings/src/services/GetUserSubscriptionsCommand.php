@@ -43,7 +43,7 @@ class GetUserSubscriptionsCommand extends TServiceCommand
             $this->addErrorMessage('Invalid request');
             return;
         }
-        $userId = $request->userId;
+        $userId = $request->userId ?? null;
         // if not user id in request and current user is not authenticated, redirect to login page.
         if (!$userId) {
             $user = $this->getUser();

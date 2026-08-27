@@ -9,4 +9,6 @@ class TSystemEvents
     const ON_SYSTEM_START = 'system.start';
     const ON_SYSTEM_STOP = 'system.stop';
     const ON_SYSTEM_ERROR = 'system.error';
+    const ON_USER_UPDATE = 'user.update';
+    const ON_USER_DELETE = 'user.delete';
 }
