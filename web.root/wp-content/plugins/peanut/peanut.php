@@ -56,7 +56,6 @@ function initializePeanut() {
     require_once  DIR_PNUT_BOOTSTRAP. '/peanut-bootstrap.php';
 
     \Peanut\Bootstrap::initialize();
-//    $test = class_exists('Peanut\Bootstrap',false);
     return class_exists('Tops\sys\TSession');
 }
 
